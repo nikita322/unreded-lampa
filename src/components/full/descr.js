@@ -1,62 +1,91 @@
 import Template from "../../interaction/template"
-import Controller from '../../core/controller'
-import Utils from '../../utils/utils'
-import Activity from '../../interaction/activity/activity'
-import Lang from '../../core/lang'
+import Controller from '../../interaction/controller'
+import Utils from '../../utils/math'
+import Activity from '../../interaction/activity'
+import Api from '../../interaction/api'
+import Lang from '../../utils/lang'
 import Select from '../../interaction/select'
-import Emit from '../../utils/emit'
-import TMDB from '../../core/api/sources/tmdb'
-import Router from '../../core/router'
 
-class Descriptiopn extends Emit{
-    constructor(data) {
-        super()
+function tag(name, items, call){
+    let elem = $(`<div class="tag-count selector">
+        <div class="tag-count__name">${name}</div>
+        <div class="tag-count__count">${items.length}</div>
+    </div>`)
 
-        this.data = data
-        this.card = data.movie
+    elem.on('hover:enter',()=>{
+        let select = items.map(a=>{
+            return {
+                title: Utils.capitalizeFirstLetter(a.name),
+                elem: a
+            }
+        })
 
-        this.emit('init')
-    }
+        Select.show({
+            title: name,
+            items: select,
+            onSelect: (a)=>{
+                Controller.toggle('full_descr')
+
+                call(a.elem)
+            },
+            onBack: ()=>{
+                Controller.toggle('full_descr')
+            }
+        })
+    })
+
+    return elem
+}
+
+function create(data, params = {}){
+    let html,body,last
     
-    create(){
-        this.html = Template.get('items_line',{title: Lang.translate('full_detail')})
+    this.create = function(){
+        html = Template.get('items_line',{title: Lang.translate('full_detail')})
 
-        let media     = this.card.name ? 'tv' : 'movie'
-        let countries = TMDB.parseCountries(this.card)
-        let date      = (this.card.release_date || this.card.first_air_date || '') + ''
+        let media = data.movie.number_of_seasons ? 'tv' : 'movie'
+        let countries = Api.sources.tmdb.parseCountries(data.movie)
+        let date = (data.movie.release_date || data.movie.first_air_date || '') + ''
 
-        this.body = Template.get('full_descr',{
-            text: (this.card.overview || Lang.translate('full_notext')) + '<br><br>',
+        body = Template.get('full_descr',{
+            text: (data.movie.overview || Lang.translate('full_notext')) + '<br><br>',
             relise: date.length > 3 ? Utils.parseTime(date).full : date.length > 0 ? date : Lang.translate('player_unknown'),
-            budget: '$ ' + Utils.numberWithSpaces(this.card.budget || 0),
+            budget: '$ ' + Utils.numberWithSpaces(data.movie.budget || 0),
             countries: countries.join(', ')
         })
 
-        let tags = this.body.find('.full-descr__tags')
+        let tags = body.find('.full-descr__tags')
 
-        if(this.card.genres.length){
-            tags.append(this.tag(Lang.translate('full_genre'), this.card.genres, (genre)=>{
+        if(data.movie.genres.length){
+            tags.append(tag(Lang.translate('full_genre'), data.movie.genres, (genre)=>{
                 Activity.push({
                     url: genre.url || media,
                     title: Utils.capitalizeFirstLetter(genre.name),
-                    component: this.card.source == 'cub' ? 'category' : 'category_full',
+                    component: 'category_full', // REMOVED: CUB support - always use category_full
                     genres: genre.id,
-                    source: this.card.source,
+                    source: params.object.source,
                     page: 1
                 })
             }))
         }
 
-        if(this.card.production_companies.length){
-            tags.append(this.tag(Lang.translate('full_production'), this.card.production_companies, (company)=>{
-                Router.call('company', {...company, card: this.card})
+        if(data.movie.production_companies.length){
+            tags.append(tag(Lang.translate('full_production'), data.movie.production_companies, (company)=>{
+                Activity.push({
+                    url: company.url || media,
+                    component: 'company',
+                    title: Lang.translate('title_company'),
+                    id: company.id,
+                    source: params.object.source,
+                    page: 1
+                })
             }))
         }
 
-        let key_tags = this.card.keywords ? (this.card.keywords.results || this.card.keywords.keywords) : []
+        let key_tags = data.movie.keywords ? (data.movie.keywords.results || data.movie.keywords.keywords) : []
 
         if(key_tags.length){
-            tags.append(this.tag(Lang.translate('full_keywords'), key_tags, (key)=>{
+            tags.append(tag(Lang.translate('full_keywords'), key_tags, (key)=>{
                 Activity.push({
                     url: 'discover/' + media,
                     title: Utils.capitalizeFirstLetter(key.name),
@@ -68,57 +97,23 @@ class Descriptiopn extends Emit{
             }))
         }
 
-        if(!this.card.budget) $('.full--budget', this.body).remove()
-        if(!countries.length) $('.full--countries', this.body).remove()
+        if(!data.movie.budget) $('.full--budget', body).remove()
+        if(!countries.length) $('.full--countries', body).remove()
 
-        this.body.find('.selector').on('hover:focus hover:enter hover:hover hover:touch',(e)=>{
-            this.last = e.target
+        body.find('.selector').on('hover:focus',(e)=>{
+            last = e.target
         })
 
-        this.html.find('.items-line__body').append(this.body)
-
-        this.emit('create')
+        html.find('.items-line__body').append(body)
     }
 
-    tag(name, items, call){
-        let elem = $(`<div class="tag-count selector">
-            <div class="tag-count__name">${name}</div>
-            <div class="tag-count__count">${items.length}</div>
-        </div>`)
-    
-        elem.on('hover:enter',()=>{
-            let select = items.map(a=>{
-                return {
-                    title: Utils.capitalizeFirstLetter(a.name),
-                    elem: a
-                }
-            })
-    
-            Select.show({
-                title: name,
-                items: select,
-                onSelect: (a)=>{
-                    this.toggle()
-    
-                    call(a.elem)
-                },
-                onBack: ()=>{
-                    this.toggle()
-                }
-            })
-        })
-    
-        return elem
-    }
-    
-    toggle(){
-        let controller = {
-            link: this,
+    this.toggle = function(){
+        Controller.add('full_descr',{
             toggle: ()=>{
                 Controller.collectionSet(this.render())
-                Controller.collectionFocus(this.last, this.render())
+                Controller.collectionFocus(last, this.render())
 
-                this.emit('toggle')
+                if(this.onToggle) this.onToggle(this)
             },
             update: ()=>{},
             right: ()=>{
@@ -126,36 +121,36 @@ class Descriptiopn extends Emit{
             },
             left: ()=>{
                 if(Navigator.canmove('left')) Navigator.move('left')
-                else this.emit('left')
+                else Controller.toggle('menu')
             },
             down: ()=>{
                 if(Navigator.canmove('down')) Navigator.move('down')
-                else this.emit('down')
+                else this.onDown()
             },
             up: ()=>{
                 if(Navigator.canmove('up')) Navigator.move('up')
-                else this.emit('up')
+                else this.onUp()
             },
-            back: this.emit.bind(this, 'back')
-        }
+            gone: ()=>{
 
-        this.emit('controller', controller)
-
-        Controller.add('full_descr', controller)
+            },
+            back: this.onBack
+        })
 
         Controller.toggle('full_descr')
     }
 
-    render(js){
-        return js ? this.html[0] : this.html
+    this.render = function(){
+        return html
     }
 
-    destroy(){
-        this.body.remove()
-        this.html.remove()
+    this.destroy = function(){
+        body.remove()
+        html.remove()
 
-        this.emit('destroy')
+        html = null
+        body = null
     }
 }
 
-export default Descriptiopn
+export default create

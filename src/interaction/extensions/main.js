@@ -1,19 +1,17 @@
 import Template from '../template'
 import Scroll from '../scroll'
-import Controller from '../../core/controller'
+import Controller from '../controller'
 import Status from '../../utils/status'
 import Line from './line'
-import Layer from '../../core/layer'
+import Layer from '../../utils/layer'
 import Arrays from '../../utils/arrays'
-import Plugins from '../../core/plugins'
-import Account from '../../core/account/account'
-import Lang from '../../core/lang'
+import Plugins from '../../utils/plugins'
+// REMOVED: import Account - CUB account system removed
+import Lang from '../../utils/lang'
 import Add from './add'
 import Extension from './extension'
-import HeadBackward from '../head/backward'
+import HeadBackward from '../head_backward'
 import Reguest from '../../utils/reguest'
-import Noty from '../noty'
-import CUB from '../../core/api/sources/cub'
 
 class Main{
     constructor(params){
@@ -50,14 +48,6 @@ class Main{
 
         add.onAdd = (url)=>{
             if(url){
-                if(url.length > 300){
-                    line.toggle()
-
-                    Noty.show(Lang.translate('account_export_fail_600'))
-
-                    return 
-                }
-
                 let data   = {url:url, status: 1}
                 let plugin = new Extension(data, {type: 'installs', autocheck: true})
                     plugin.create()
@@ -131,11 +121,8 @@ class Main{
     load(){
         this.appendLoader()
 
-        let need = 2
-
-        if(window.lampa_settings.plugins_store) need += 2
-
-        let status = new Status(need)
+        // REMOVED: CUB extensions loading - only local plugins now
+        let status = new Status(1)
 
         status.onComplite = ()=>{
             this.loader.remove()
@@ -143,40 +130,10 @@ class Main{
             this.appendLine(status.data.installs, {
                 title: Lang.translate('extensions_from_memory'),
                 type: 'installs',
-                autocheck: true 
+                autocheck: true
             })
 
-            if(status.data.plugins.length) this.appendLine(status.data.plugins,{
-                title: Lang.translate('extensions_from_cub'),
-                cub:true, 
-                type: 'plugins',
-                autocheck: true 
-            })
-            
-            if(status.data.best && status.data.best.length) this.appendLine(status.data.best,{
-                title: Lang.translate('extensions_from_popular'),
-                cub:true, 
-                type: 'extensions'
-            })
-
-            if(status.data.all && status.data.all.length)  this.appendLine(status.data.all.reverse(),{
-                title: Lang.translate('extensions_from_lib'),
-                cub:true, 
-                type: 'extensions'
-            })
-
-            if(status.data.list){
-                status.data.list.forEach(data=>{
-                    if(data.results.length){
-                        this.appendLine(data.results,{
-                            title: Lang.translate('extensions_hpu_' + data.hpu),
-                            cub:true, 
-                            type: 'extensions',
-                            hpu: data.hpu
-                        })
-                    }
-                })
-            }
+            // REMOVED: CUB plugins, best, all, and list - CUB features removed
 
             this.add()
 
@@ -189,22 +146,7 @@ class Main{
 
         status.append('installs', Plugins.get().reverse())
 
-        Account.Api.plugins((plugins)=>{
-            status.append('plugins', plugins)
-        })
-
-        if(window.lampa_settings.plugins_store){
-            CUB.extensions((extensions)=>{
-                if(extensions.results){
-                    status.need--
-                    status.append('list', extensions.results)
-                }
-                else{
-                    status.append('best', extensions.best)
-                    status.append('all', extensions.plugins)
-                }
-            })
-        }
+        // REMOVED: Account.plugins() and Account.extensions() - CUB features removed
     }
 
     appendLoader(){

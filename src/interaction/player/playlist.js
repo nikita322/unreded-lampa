@@ -1,7 +1,7 @@
 import Subscribe from '../../utils/subscribe'
 import Select from '../select'
-import Controller from '../../core/controller'
-import Lang from '../../core/lang'
+import Controller from '../controller'
+import Lang from '../../utils/lang'
 
 let listener = Subscribe()
 let current  = ''
@@ -12,8 +12,6 @@ let position = 0
  * Показать плейлист
  */
 function show(){
-    if(!playlist.length) return
-    
     active()
 
     let enabled = Controller.enabled()
@@ -78,16 +76,6 @@ function next(){
 }
 
 /**
- * Можно ли далее
- * @returns {boolean}
- */
-function canNext(){
-    active()
-
-    return position < playlist.length - 1
-}
-
-/**
  * Установить плейлист
  * @param {[{title:string, url:string}]} p 
  */
@@ -127,6 +115,5 @@ export default {
     set,
     prev,
     next,
-    canNext,
     position: ()=> position
 }

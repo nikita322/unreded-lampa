@@ -1,5 +1,6 @@
 import Template from './template'
-import Controller from '../core/controller'
+import Controller from './controller'
+import Utils from '../utils/math'
 
 let html
 let object

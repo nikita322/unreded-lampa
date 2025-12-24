@@ -1,23 +1,17 @@
 import Template from '../template'
 import Subscribe from '../../utils/subscribe'
-import Tizen from './tizen'
-import WebOS from './webos'
-import Platform from '../../core/platform'
+// REMOVED: Tizen, WebOS, Orsay players, YouTube functionality - Platform-specific players removed
+import Platform from '../../utils/platform'
 import Arrays from '../../utils/arrays'
-import Storage from '../../core/storage/storage'
+import Storage from '../../utils/storage'
 import CustomSubs from './subs'
 import Normalization from './normalization'
-import Lang from '../../core/lang'
+import Lang from '../../utils/lang'
 import Panel from './panel'
-import Utils from '../../utils/utils'
-import DeviceInput from '../device_input'
-import Orsay from './orsay'
-import YouTube from './youtube'
+import Utils from '../../utils/math'
+import DeviceInput from '../../utils/device_input'
 import TV from './iptv'
-import Controller from '../../core/controller'
-import Player from '../player'
-import Segments from './segments'
-import Bell from '../bell'
+import Controller from '../controller'
 
 let listener = Subscribe()
 let html
@@ -38,19 +32,15 @@ let wait
 let neeed_sacle
 let neeed_sacle_last
 let neeed_speed
-let webos
+// REMOVED: webos, webos_wait - WebOS player variables removed
 let hls
 let dash
-let webos_wait = {}
 let normalization
 let hls_parser
 let render_trigger
 
 let click_nums = 0
 let click_timer
-let pause_timer
-
-let video_tube = []
 
 function init(){
     html      = Template.get('player_video')
@@ -66,9 +56,9 @@ function init(){
     })
 
     html.on('click',(e)=>{
-        if(DeviceInput.canClick(e.originalEvent)){
+        if((Storage.field('navigation_type') == 'mouse' || Utils.isTouchDevice()) && DeviceInput.canClick(e.originalEvent)){
             clearTimeout(click_timer)
-            
+
             click_nums++
 
             if(TV.playning()) click_nums = 1
@@ -92,105 +82,32 @@ function init(){
                     else{
                         backworkIcon.addClass('rewind').find('span').text('-' + pow + ' sec')
                     }
-                    
+
                     to(video.currentTime + dir * pow)
 
                     click_nums = 0
                 }, 300)
             }
-        } 
-    })
-
-    Lampa.Listener.follow('resize_end', ()=>{
-        if(video){
-            neeed_sacle = neeed_sacle_last
-
-            scale()
-
-            if(video.resize) video.resize()
-        } 
-    })
-
-    /**
-     * Специально для вебось
-     */
-    listener.follow('webos_subs',(data)=>{
-        webos_wait.subs = convertToArray(data.subs)
-    })
-
-    listener.follow('webos_tracks',(data)=>{
-        webos_wait.tracks = convertToArray(data.tracks)
-    })
-
-    registerTube({
-        name: 'YouTube',
-        verify: (src) => src.indexOf('youtube.com') >= 0 || src.indexOf('youtu.be') >= 0,
-        create: YouTube
-    })
-
-    Segments.listener.follow('skip', (e) => {
-        if(Storage.get('player_segments_' + e.type, 'auto') == 'auto'){
-            video.currentTime = Math.min(video.duration, e.segment.end)
-
-            Bell.push({text: Lang.translate('player_segments_skiped'), icon: Template.string('icon_viewed')})
-        } 
-    })
-}
-
-/**
- * Переключаем субтитры с предыдущей серии
- */
-function webosLoadSubs(){
-    let subs = webos_wait.subs
-
-    video.webos_subs = subs
-    
-    let inx = params.sub + 1
-
-    if(typeof params.sub !== 'undefined' && subs[inx]){
-        subs.forEach(e=>{e.mode = 'disabled'; e.selected = false})
-
-        subs[inx].mode     = 'showing'
-        subs[inx].selected = true
-
-        console.log('WebOS','enable subs', inx)
-
-        subsview(true)
-    }
-    else if(Storage.field('subtitles_start')){
-        let full = subs.find(s=>(s.label || '').indexOf('олные') >= 0)
-
-        subs[0].selected = false
-         
-        if(full){
-            full.mode     = 'showing'
-            full.selected = true
         }
-        else{
-            subs[1].mode     = 'showing'
-            subs[1].selected = true
-        }
-        
-        subsview(true)
-    }
-}
+    })
 
-/**
- * Переключаем дорожки с предыдущей серии
- */
-function webosLoadTracks(){
-    let tracks = webos_wait.tracks
+    let time_resize
 
-    video.webos_tracks = tracks
+    $(window).on('resize',()=>{
+        clearTimeout(time_resize)
 
-    if(typeof params.track !== 'undefined' && tracks[params.track]){
-        tracks.forEach(e=>e.selected = false)
+        time_resize = setTimeout(()=>{
+            if(video){
+                neeed_sacle = neeed_sacle_last
 
-        console.log('WebOS','enable tracks', params.track)
+                scale()
 
-        tracks[params.track].enabled  = true
-        tracks[params.track].selected = true
-    }
+                if(video.resize) video.resize()
+            }
+        },200)
+    })
+
+    // REMOVED: WebOS event listeners, webosLoadSubs(), webosLoadTracks() - WebOS player removed
 }
 
 /**
@@ -231,7 +148,7 @@ function bind(){
             else if(typeof error.code !== 'undefined'){
                 listener.send('error', {error: 'code ['+error.code+'] details ['+msg+']', fatal: true})
             }
-        } 
+        }
     })
 
     // прогресс буферизации
@@ -280,8 +197,6 @@ function bind(){
         mutation()
 
         if(customsubs) customsubs.update(video.currentTime)
-
-        Segments.update(video.currentTime)
     })
 
     // обновляем субтитры
@@ -396,7 +311,7 @@ function mutation(){
 
 /**
  * Конвертировать object to array
- * @param {object[]} arr 
+ * @param {object[]} arr
  * @returns {array}
  */
 function convertToArray(arr){
@@ -469,8 +384,9 @@ function scale(){
 
     sx = sx.toFixed(2)
     sy = sy.toFixed(2)
-    
-    if((Platform.is('orsay') && Storage.field('player') == 'inner') || Storage.field('player_scale_method') == 'calculate'){
+
+    // REMOVED: Orsay platform check - Orsay player removed
+    if(Storage.field('player_scale_method') == 'calculate'){
         var nw = vw * rt,
             nh = vh * rt
 
@@ -488,7 +404,7 @@ function scale(){
             transform: sx == 1.00 ? 'unset' : 'scaleX('+sx+') scaleY('+sy+')'
         }
     }
-    
+
     $(video).css(sz)
 
     neeed_sacle = false
@@ -499,14 +415,14 @@ function scale(){
  * @returns {{sub:integer, track:integer, level:integer}}
  */
 function saveParams(){
-    let subs   = video.customSubs || video.webos_subs || video.textTracks || []
+    let subs   = video.customSubs || video.textTracks || []
     let tracks = []
 
     if(hls && hls.audioTracks && hls.audioTracks.length)   tracks = hls.audioTracks
     else if(dash)   tracks = dash.getTracksFor('audio')
     else if(video.audioTracks && video.audioTracks.length) tracks = video.audioTracks
 
-    if(webos && webos.sourceInfo) tracks = video.webos_tracks || []
+    // REMOVED: WebOS tracks check - WebOS player removed
 
     if(tracks.length){
         for(let i = 0; i < tracks.length; i++){
@@ -518,14 +434,14 @@ function saveParams(){
         for(let i = 0; i < subs.length; i++){
             if(subs[i].enabled == true || subs[i].selected == true){
                 params.sub = subs[i].index
-            } 
+            }
         }
     }
 
     if(hls && hls.levels) params.level = hls.currentLevel
     if(dash) params.level = dash.getQualityFor('video')
 
-    console.log('WebOS','saved params', params)
+    console.log('Player','saved params', params)
 
     return params
 }
@@ -539,7 +455,7 @@ function clearParamas(){
 
 /**
  * Загрузитьновое состояние из прошлого
- * @param {{sub:integer, track:integer, level:integer}} saved_params 
+ * @param {{sub:integer, track:integer, level:integer}} saved_params
  */
 function setParams(saved_params){
     params = saved_params
@@ -568,7 +484,7 @@ function loaded(){
                 },
                 get: ()=>{}
             })
-        }) 
+        })
     }
     else if(dash){
         tracks = dash.getTracksFor('audio')
@@ -590,12 +506,7 @@ function loaded(){
 
     console.log('Player','tracks', video.audioTracks)
 
-    if(webos && webos.sourceInfo){
-        tracks = []
-
-        if(webos_wait.tracks) webosLoadTracks()
-        if(webos_wait.subs)   webosLoadSubs()
-    } 
+    // REMOVED: WebOS checks - WebOS player removed
 
     if(tracks.length){
         tracks = convertToArray(tracks)
@@ -614,7 +525,7 @@ function loaded(){
 
     if(subs.length){
         subs = convertToArray(subs)
-        
+
         if(typeof params.sub !== 'undefined' && subs[params.sub]){
             subs.forEach(e=>{e.mode = 'disabled'; e.selected = false})
 
@@ -625,7 +536,7 @@ function loaded(){
         }
         else if(Storage.field('subtitles_start')){
             let full = subs.find(s=>(s.label || '').indexOf('олные') >= 0)
-             
+
             if(full){
                 full.mode     = 'showing'
                 full.selected = true
@@ -634,7 +545,7 @@ function loaded(){
                 subs[0].mode     = 'showing'
                 subs[0].selected = true
             }
-            
+
             subsview(true)
         }
 
@@ -651,7 +562,7 @@ function loaded(){
                 current_level  = level.title
 
                 level.selected = true
-            } 
+            }
 
             Object.defineProperty(level, "enabled", {
                 set: (v)=>{
@@ -684,7 +595,7 @@ function loaded(){
 
     if(dash){
         let bitrates = dash.getBitrateInfoListFor("video"),current_level = 'AUTO'
-        
+
         bitrates.forEach((level, i)=>{
             level.title = level.width ? level.width + 'x' + level.height : 'AUTO'
 
@@ -696,7 +607,7 @@ function loaded(){
                         dash.getSettings().streaming.abr.autoSwitchBitrate = false
 
                         dash.setQualityFor("video", level.qualityIndex)
-                    } 
+                    }
                 },
                 get: ()=>{}
             })
@@ -712,7 +623,7 @@ function loaded(){
 
             current_level = bitrates[params.level].title
         }
-        
+
         listener.send('levels', {levels: bitrates, current: current_level})
     }
 }
@@ -720,13 +631,9 @@ function loaded(){
 
 /**
  * Установить собственные субтитры
- * @param {[{index:integer, label:string, url:string}]} subs 
+ * @param {[{index:integer, label:string, url:string}]} subs
  */
 function customSubs(subs){
-    if(!Arrays.isArray(subs)) return console.log('Player','custom subs not array', subs)
-
-    if(customsubs) customsubs.destroy()
-
     video.customSubs = Arrays.clone(subs)
 
     console.log('Player','custom subs', subs)
@@ -759,13 +666,11 @@ function customSubs(subs){
             })
         }
     })
-    
-    video.customSubs.length > 0 && listener.send('subs', {subs: video.customSubs})
 }
 
 /**
  * Включить или выключить субтитры
- * @param {boolean} status 
+ * @param {boolean} status
  */
 function subsview(status){
     subtitles.toggleClass('hide', !status)
@@ -796,36 +701,27 @@ function applySubsSettings() {
  */
 function create(){
     let videobox
-    
-    if(Platform.is('tizen') && Storage.field('player') == 'tizen'){
-        videobox = Tizen((object)=>{
-            video = object
-        })
-    }
-    else if (Platform.is('orsay') && Storage.field('player') == 'orsay') {
-        videobox = Orsay((object) => {
-            video = object
-        })
-    }
-    else{
-        videobox = $('<video class="player-video__video" poster="./img/video_poster.png" crossorigin="anonymous"></video>')
 
-        if(Platform.is('apple') && Storage.field('player') !== 'ios') videobox.attr('playsinline','true')
+    // REMOVED: Tizen player creation - Tizen player removed
+    // REMOVED: Orsay player creation - Orsay player removed
 
-        video = videobox[0]
+    videobox = $('<video class="player-video__video" poster="./img/video_poster.png" crossorigin="anonymous"></video>')
 
-        if(typeof video.canPlayType !== 'function') video.canPlayType = ()=>{}
+    if(Platform.is('apple') && Storage.field('player') !== 'ios') videobox.attr('playsinline','true')
 
-        if(Storage.field('player_normalization')){
-            try{
-                console.log('Player','normalization enabled')
+    video = videobox[0]
 
-                normalization = new Normalization()
-                normalization.attach(video)
-            }
-            catch(e){
-                console.log('Player','normalization error:', e.stack)
-            }
+    if(typeof video.canPlayType !== 'function') video.canPlayType = ()=>{}
+
+    if(Storage.field('player_normalization')){
+        try{
+            console.log('Player','normalization enabled')
+
+            normalization = new Normalization()
+            normalization.attach(video)
+        }
+        catch(e){
+            console.log('Player','normalization error:', e.stack)
         }
     }
 
@@ -833,53 +729,12 @@ function create(){
 
     display.append(videobox)
 
-    if(Platform.is('webos') && !webos && !Player.playdata().voiceovers){
-        webos = new WebOS(video)
-        webos.callback = ()=>{
-            let src = video.src
-            let sub = video.customSubs
-
-            console.log('WebOS','video loaded')
-
-            $(video).remove()
-
-            if(normalization) normalization.destroy()
-
-            url(src, true)
-
-            video.customSubs = sub
-
-            webos.repet(video)
-
-            listener.send('reset_continue',{})
-        }
-        webos.start()
-    }
+    // REMOVED: WebOS player initialization - WebOS player removed
 
     bind()
 }
 
-function createTube(src){
-    let verify = verifyTube(src)
-  
-    if(verify) {
-        let videobox = verify.create((object) => {
-            video = object
-        })
-
-        !!videobox && display.append(videobox)
-
-        bind()
-
-        setTimeout(()=>{
-            load(src)
-        },100)
-
-        return true
-    }
-  
-    return false
-}
+// REMOVED: createYouTubePlayer() function - YouTube functionality removed
 
 function normalizationVisible(status){
     if(normalization) normalization.visible(status)
@@ -887,7 +742,7 @@ function normalizationVisible(status){
 
 /**
  * Показать згразку или нет
- * @param {boolean} status 
+ * @param {boolean} status
  */
 function loader(status){
     wait = status
@@ -897,7 +752,7 @@ function loader(status){
 
 /**
  * Устанавливаем ссылку на видео
- * @param {string} src 
+ * @param {string} src
  */
  function url(src, change_quality){
     loader(true)
@@ -912,21 +767,18 @@ function loader(status){
         dash = false
     }
 
-    if(createTube(src)) return
+    // REMOVED: YouTube URL check - YouTube functionality removed
 
     create()
 
     if(/\.mpd/.test(src) && typeof dashjs !== 'undefined'){
         try{
-            if(Platform.is('orsay') && Storage.field('player') == 'orsay')
-                {load(src)}
-            else{
-                dash = dashjs.MediaPlayer().create()
+            // REMOVED: Orsay check - Orsay player removed
+            dash = dashjs.MediaPlayer().create()
 
-                dash.getSettings().streaming.abr.autoSwitchBitrate = false
+            dash.getSettings().streaming.abr.autoSwitchBitrate = false
 
-                dash.initialize(video, src, true)
-            }
+            dash.initialize(video, src, true)
         }
         catch(e){
             console.log('Player','Dash error:', e.stack)
@@ -938,47 +790,26 @@ function loader(status){
         if(navigator.userAgent.toLowerCase().indexOf('maple') > -1) src += '|COMPONENT=HLS'
 
         if(typeof Hls !== 'undefined'){
-            let use_program = Storage.field('player_hls_method') == 'hlsjs' || Platform.chromeVersion() > 120
-            let hls_type    = Player.playdata().hls_type
-            let hls_native  = video.canPlayType('application/vnd.apple.mpegurl')
+            let use_program = Storage.field('player_hls_method') == 'hlsjs'
 
-            //если это плеер тайзен, то используем только системный
-            if(Platform.is('tizen') && Storage.field('player') == 'tizen') use_program = false
-            //если это плеер orsay, то используем только системный
-            else  if(Platform.is('orsay') && Storage.field('player') == 'orsay') use_program = false
+            // REMOVED: Tizen player check - Tizen player removed
+            // REMOVED: Orsay player check - Orsay player removed
             //а если системный и m3u8 не поддерживается, то переключаем на программный
-            else if(!use_program && !hls_native) use_program = true
+            if(!use_program && !video.canPlayType('application/vnd.apple.mpegurl')) use_program = true
 
             //однако, если программный тоже не поддерживается, то переключаем на системный и будет что будет
             if(!Hls.isSupported()) use_program = false
 
-            //если плагин выбрал тип hls, то используем его
-            if(hls_type == 'hlsjs')                     use_program = true
-            else if(hls_type == 'native' && hls_native) use_program = false
+            console.log('Player','use program hls:', use_program)
 
-            console.log('Player','use program hls:', use_program, 'hlsjs:', Hls.isSupported())
+            console.log('Player', 'can play vnd.apple.mpegurl', video.canPlayType('application/vnd.apple.mpegurl') ? true : false)
 
-            if(!Platform.is('tizen')) console.log('Player', 'can play vnd.apple.mpegurl', hls_native ? true : false)
-            
             //погнали
             if(use_program){
-                console.log('Player','hls start program')
-
-                hls = new Hls({
-                    manifestLoadTimeout: Player.playdata().hls_manifest_timeout || 10000,
-                    manifestLoadMaxRetryTimeout: Player.playdata().hls_retry_timeout || 30000,
-                    xhrSetup: function(xhr, url) {
-                        xhr.timeout = Player.playdata().hls_manifest_timeout || 10000
-                        xhr.ontimeout = function() {
-                            console.log('Player','hls manifestLoadTimeout')
-                        }
-                    }
-                })
-                hls.loadSource(src)
+                hls = new Hls()
                 hls.attachMedia(video)
+                hls.loadSource(src)
                 hls.on(Hls.Events.ERROR, function (event, data){
-                    console.log('Player','hls error', data.reason, data.details, data.fatal)
-
                     if(data.details === Hls.ErrorDetails.MANIFEST_PARSING_ERROR){
                         if(data.reason === "no EXTM3U delimiter") {
                             load(src)
@@ -1003,16 +834,7 @@ function loader(status){
 
                 let send_load_ready = false
 
-                hls_parser = new Hls({
-                    manifestLoadTimeout: Player.playdata().hls_manifest_timeout || 10000,
-                    manifestLoadMaxRetryTimeout: Player.playdata().hls_retry_timeout || 30000,
-                    xhrSetup: function(xhr, url) {
-                        xhr.timeout = Player.playdata().hls_manifest_timeout || 10000
-                        xhr.ontimeout = function() {
-                            console.log('Player','hls manifestLoadTimeout')
-                        }
-                    }
-                })
+                hls_parser = new Hls()
                 hls_parser.loadSource(src)
                 hls_parser.on(Hls.Events.ERROR, function (event, data){
                     console.log('Player','hls parse error', data.reason, data.details, data.fatal)
@@ -1061,7 +883,7 @@ function loader(status){
 
 /**
  * Начать загрузку
- * @param {string} src 
+ * @param {string} src
  */
 function load(src){
     if(hls_parser){
@@ -1126,12 +948,6 @@ function pause(){
     }
 
     paused.removeClass('hide')
-    
-    clearTimeout(pause_timer)
-
-    pause_timer = setTimeout(()=>{
-        paused.addClass('hide')
-    },4000)
 
     listener.send('pause',{})
 }
@@ -1146,7 +962,7 @@ function playpause(){
         play()
 
         listener.send('play', {})
-    }  
+    }
     else{
         pause()
 
@@ -1169,7 +985,7 @@ function rewindEnd(immediately){
 
         play()
 
-        if(webos) webos.rewinded()
+        // REMOVED: WebOS rewind callback - WebOS player removed
     },immediately ? 0 : 1000)
 }
 
@@ -1220,14 +1036,6 @@ function rewind(forward, custom_step){
             rewind_position -= rewind_force
         }
 
-        let skip = Segments.get(video.currentTime)
-
-        if(forward && skip && !skip.segment.skiped && Storage.get('player_segments_' + skip.type) == 'user'){
-            rewind_position = Math.min(video.duration, skip.segment.end)
-            
-            skip.segment.skiped = true
-        }
-
         rewindStart(rewind_position)
     }
 }
@@ -1251,13 +1059,13 @@ function speed(value){
     let fv = value == 'default' ? 1 : parseFloat(value)
 
     if(video.speed) video.speed(fv)
-    else if(webos) webos.speed(fv)
+    // REMOVED: WebOS speed control - WebOS player removed
     else video.playbackRate = fv
 }
 
 /**
- * Перемотка на позицию 
- * @param {number} type 
+ * Перемотка на позицию
+ * @param {number} type
  */
 function to(seconds){
     pause()
@@ -1294,26 +1102,6 @@ function changeVolume(volume){
     Storage.set('player_volume',volume)
 }
 
-function registerTube(params) {
-    if (typeof params.verify === 'function' && typeof params.create === 'function') {
-        if(video_tube.indexOf(params) == -1) video_tube.push(params)
-
-        return true
-    }
-
-    return false
-}
-
-function verifyTube(src){
-    let find = video_tube.find(e=>e.verify(src))
-
-    return find ? find : false
-}
-
-function removeTube(params) {
-    Arrays.remove(video_tube, params)
-}
-
 /**
  * Уничтожить
  * @param {boolean} type - сохранить с параметрами
@@ -1322,20 +1110,19 @@ function destroy(savemeta){
     subsview(false)
 
     neeed_sacle = false
-    
+
     if(render_trigger){
         render_trigger.remove()
         render_trigger = false
-    } 
+    }
 
     paused.addClass('hide')
 
-    if(webos) webos.destroy()
+    // REMOVED: WebOS destroy - WebOS player removed
 
     $('> div',subtitles).empty()
 
-    webos = null
-    webos_wait = {}
+    // REMOVED: WebOS cleanup - WebOS player removed
 
     clearTimeout(click_timer)
 
@@ -1347,7 +1134,7 @@ function destroy(savemeta){
             hls.destroy()
         }
         catch(e){}
-        
+
         hls = false
 
         hls_destoyed = true
@@ -1366,7 +1153,6 @@ function destroy(savemeta){
             dash.destroy()
         }
         catch(e){}
-
         dash = false
 
         dash_destoyed = true
@@ -1377,9 +1163,6 @@ function destroy(savemeta){
             customsubs.destroy()
             customsubs = false
         }
-    }
-    else{
-        Lampa.PlayerInfo.set('bitrate','')
     }
 
     exitFromPIP()
@@ -1428,9 +1211,5 @@ export default {
     setParams,
     normalizationVisible,
     togglePictureInPicture,
-    applySubsSettings,
-    changeVolume,
-    registerTube,
-    removeTube,
-    verifyTube
+    changeVolume
 }

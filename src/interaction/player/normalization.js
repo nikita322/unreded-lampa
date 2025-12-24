@@ -1,4 +1,4 @@
-import Storage from '../../core/storage/storage'
+import Storage from '../../utils/storage'
 
 let context
 
@@ -27,51 +27,25 @@ function Source(video){
     draw_canvas.width  = 5
     draw_canvas.height = Math.round(window.innerHeight * 0.26)
 
+    //размер буффера
     try{
         analyser.fftSize = 2048 * 4
-
-        console.log('Player','normalization fftSize 2048 * 4')
     }
     catch(e){
         try{
             analyser.fftSize = 2048 * 2
-
-            console.log('Player','normalization fftSize 2048 * 2')
         }
         catch(e){
             analyser.fftSize = 2048
-
-            console.log('Player','normalization fftSize 2048')
         }
     }
-
-    let frequencyData = new Uint8Array(analyser.frequencyBinCount)
-
-    let midFreqRange  = { start: 1300, end: 4000 } // Средние частоты
-    let highFreqRange = { start: 4000, end: 8000 } // Высокие частоты
-
-    function calculateRMS(range) {
-        let startIndex = Math.floor(range.start * analyser.frequencyBinCount / (context.sampleRate / 2))
-        let endIndex   = Math.floor(range.end * analyser.frequencyBinCount / (context.sampleRate / 2))
-
-        startIndex = Math.max(0, Math.min(startIndex, frequencyData.length - 1))
-        endIndex   = Math.max(0, Math.min(endIndex, frequencyData.length - 1))
     
-        let total = 0
-        let count = 0
-    
-        for (let i = startIndex; i <= endIndex; i++) {
-            let value = frequencyData[i]
 
-            total += value * value
+    //данные от анализа
+    analyser.time_array = new Uint8Array(analyser.fftSize)
 
-            count++
-        }
-    
-        return count > 0 ? Math.sqrt(total / count) : 0
-    }
-
-    analyser.gain_smooth = 1
+    //нижний порог
+    analyser.min_db = 0
 
     //подключаем анализ
     source.connect(analyser)
@@ -87,27 +61,38 @@ function Source(video){
     function update(){
         if(!destroy) requestAnimationFrame(update)
 
-        analyser.getByteFrequencyData(frequencyData)
+        analyser.getByteTimeDomainData(analyser.time_array)
 
-        let rms_mid  = calculateRMS(midFreqRange)
-        let rms_high = calculateRMS(highFreqRange)
+        let total = 0,rms = 0, i = 0
+        let float, mdb
+        let min = -48
 
-        let db_mid  = toDb(rms_mid / 255)
-        let db_high = toDb(rms_high / 255)
+        while ( i < analyser.fftSize ) {
+			float = ( analyser.time_array[i++] / 0x80 ) - 1
 
-        let sm_st = Storage.get('player_normalization_smooth','medium')
-        let pw_st = Storage.get('player_normalization_power','hight')
-        let tp_st = Storage.get('player_normalization_type', 'all')
+			total += ( float * float )
 
-        let pw_am = pw_st == 'hight' ? 1 : pw_st == 'medium' ? 0.7 : 0.35
+			rms = Math.max(rms, float)
 
-        let gain = Math.max(0.0, Math.min(2, (db_mid + db_high) / 2 / -24))
+            mdb = toDb(float)
 
-        analyser.gain_smooth = sm_st == 'none' ? gain : smooth(analyser.gain_smooth, gain, sm_st == 'hight' ? 45 : sm_st == 'medium' ? 20 : 5)
+			if(!isNaN(mdb)) min = Math.max(min, mdb)
+		}
 
-        let vol = pw_st == 'none' ? 1 : (1 + (analyser.gain_smooth - 1) * pw_am)
+        rms = Math.sqrt(total / analyser.fftSize)
 
-        volume.gain.value = tp_st == 'all' ? vol : tp_st == 'up' ? Math.max(1, vol) : Math.min(1, vol)
+        let db = toDb(rms)
+        let sm = Storage.get('player_normalization_smooth','medium')
+        let pw = Storage.get('player_normalization_power','hight')
+
+        if(min === -48) min = db
+        if(min === -48) min = -40
+
+        analyser.min_db = smooth(analyser.min_db, min, sm == 'hight' ? 45 : sm == 'medium' ? 25 : 10)
+
+        let low = ((-48) - analyser.min_db) * (pw == 'hight' ? 1 : pw == 'medium' ? 0.75 : 0.5)
+
+        volume.gain.value = pw == 'none' ? 1 : Math.max(0.0,Math.min(2, db / low))
         
         if(display){
             draw_context.clearRect(0, 0, draw_canvas.width, draw_canvas.height)

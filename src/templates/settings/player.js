@@ -17,11 +17,8 @@ let html = `<div>
         <div class="settings-param__descr">#{settings_player_torrent_type_descr}</div>
     </div>
 
-    <div class="settings-param selector is--android" data-type="select" data-name="player_launch_trailers">
-        <div class="settings-param__name">#{settings_player_launch_trailers}</div>
-        <div class="settings-param__value"></div>
-    </div>
-    
+    <!-- REMOVED: Trailer player launch setting - YouTube/trailers removed -->
+
     <div class="settings-param selector is--android" data-type="button" data-name="reset_player" data-static="true">
         <div class="settings-param__name">#{settings_player_reset}</div>
         <div class="settings-param__value"></div>
@@ -77,6 +74,24 @@ let html = `<div>
             <div class="settings-param__name">#{settings_player_subs_use}</div>
             <div class="settings-param__value"></div>
             <div class="settings-param__descr">#{settings_player_subs_use_descr}</div>
+        </div>
+
+        <div class="settings-param selector" data-type="select" data-name="subtitles_size">
+            <div class="settings-param__name">#{settings_player_subs_size}</div>
+            <div class="settings-param__value"></div>
+            <div class="settings-param__descr">#{settings_player_subs_size_descr}</div>
+        </div>
+        
+        <div class="settings-param selector" data-type="toggle" data-name="subtitles_stroke">
+            <div class="settings-param__name">#{settings_player_subs_stroke_use}</div>
+            <div class="settings-param__value"></div>
+            <div class="settings-param__descr">#{settings_player_subs_stroke_use_descr}</div>
+        </div>
+        
+        <div class="settings-param selector" data-type="toggle" data-name="subtitles_backdrop">
+            <div class="settings-param__name">#{settings_player_subs_backdrop_use}</div>
+            <div class="settings-param__value"></div>
+            <div class="settings-param__descr">#{settings_player_subs_backdrop_use_descr}</div>
         </div>
     </div>
 

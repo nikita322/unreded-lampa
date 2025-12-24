@@ -1,6 +1,6 @@
 let html = `<div class="torrent-install">
     <div class="torrent-install__left">
-        <img src="https://yumata.github.io/lampa/img/ili/tv.png" class="torrent-install"/>
+        <img src="./img/ili/tv.png" class="torrent-install"/>
     </div>
     <div class="torrent-install__details">
         <div class="torrent-install__title">#{torrent_install_need}</div>
@@ -12,6 +12,11 @@ let html = `<div class="torrent-install">
             <div class="torrent-install__link">
                 <div>LG - Samsung</div>
                 <div>@lampa_group</div>
+            </div>
+
+            <div class="torrent-install__link">
+                <div>Android</div>
+                <div>@lampa_android</div>
             </div>
         </div>
     </div>

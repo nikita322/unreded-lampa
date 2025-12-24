@@ -29,6 +29,10 @@ body.light--version{
         .card--small .card__title{
             margin-top: 0.5em;
         }
+
+        .items-line .card{
+            margin-bottom: 2em;
+        }
     }
 
     @media screen and (max-width: $media_md) {

@@ -1,12 +1,12 @@
 import Item from "./item"
-import Controller from '../../core/controller'
+import Controller from '../controller'
 import Select from '../select'
-import Lang from '../../core/lang'
-import Utils from '../../utils/utils'
-import Storage from '../../core/storage/storage'
+import Lang from '../../utils/lang'
+import Utils from '../../utils/math'
+import Storage from '../../utils/storage'
 import Screen from '../screensaver'
-import Manifest from '../../core/manifest'
-import Account from '../../core/account/account'
+import Manifest from '../../utils/manifest'
+// REMOVED: import Account - CUB account system removed
 
 class Screensaver extends Item{
     constructor(data, params){
@@ -14,7 +14,8 @@ class Screensaver extends Item{
 
         this.template = 'extensions_screensaver'
 
-        this.link = Utils.rewriteIfHTTPS(Utils.protocol() + Manifest.cub_domain + '/extensions/' + this.data.id)
+        // REMOVED: CUB extensions - screensavers no longer loaded from CUB domain
+        this.link = ''
     }
 
     update(){
@@ -26,13 +27,12 @@ class Screensaver extends Item{
     }
 
     active(){
-        return Storage.field('screensaver_type') == 'cub' && Storage.get('cub_screensaver','') == this.link
+        // REMOVED: CUB screensavers - always return false as CUB domain is removed
+        return false
     }
 
     visible(){
         super.visible()
-
-        if(this.data.premium) this.premium()
 
         this.img = this.html.querySelector('.extensions__item-image')
 
@@ -40,7 +40,7 @@ class Screensaver extends Item{
             this.img.classList.add('loaded')
         }
 
-        this.img.src = Utils.fixMirrorLink(Utils.rewriteIfHTTPS(this.data.image))
+        this.img.src = Utils.rewriteIfHTTPS(this.data.image)
 
         this.html.addEventListener('hover:enter',this.menu.bind(this))
     }
@@ -69,20 +69,12 @@ class Screensaver extends Item{
                 Controller.toggle(controller)
 
                 if(a.toggle){
-                    if(this.active()) Storage.set('cub_screensaver','')
-                    else{
-                        if(this.data.premium && !Account.hasPremium()) return Lampa.Account.showCubPremium()
-
-                        Storage.set('cub_screensaver',this.link)
-                        Storage.set('screensaver_type','cub')
-                    }
-
-                    this.update()
+                    // REMOVED: CUB screensavers - functionality disabled
+                    // CUB domain removed, screensavers no longer available
                 }
                 else{
-                    Screen.show('cub', {
-                        url: this.link
-                    })
+                    // REMOVED: CUB screensaver preview - functionality disabled
+                    // Screen.show('cub', {url: this.link})
                 }
             }
         })

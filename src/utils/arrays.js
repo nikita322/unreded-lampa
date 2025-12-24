@@ -40,10 +40,10 @@ function isArray(a){
 
 function extend(a,b,replase){
     for(var i in b){
-        if(isObject(b[i])){
-            if(a[i] == undefined) a[i] = {};
+        if(typeof b[i] == 'object'){
+            if(a[i] == undefined) a[i] = Object.prototype.toString.call( b[i] ) == '[object Array]' ? [] : {};
             
-            this.extend(a[i], b[i], replase);
+            this.extend(a[i],b[i],replase);
         } 
         else if(a[i] == undefined || replase) a[i] = b[i];
     }
@@ -117,19 +117,6 @@ function shuffle(array){
     return array;
 }
 
-function shuffleArrayFromIndex(array, startIndex) {
-    if (startIndex < 0 || startIndex >= array.length) {
-        return
-    }
-
-    for (let i = array.length - 1; i > startIndex; i--) {
-        // Выбираем случайный индекс от startIndex до i
-        const j = Math.floor(Math.random() * (i - startIndex + 1)) + startIndex;
-        // Меняем местами элементы array[i] и array[j]
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-}
-
 function removeDuplicates(array, key) {
     let seen = []
 
@@ -140,29 +127,6 @@ function removeDuplicates(array, key) {
         }
         else return false
     })
-}
-
-function flatMap(arr, add){
-    let result = []
-
-    for (let i = 0; i < arr.length; i++) {
-        result.push(arr[i])
-
-        if (i < arr.length - 1){
-            if (add && typeof add == 'function') {
-                result.push(add(arr[i], arr[i + 1]))
-            }
-            else {
-                result.push(add || null)
-            }
-        }
-    }
-
-    return result
-}
-
-function unique(arr){
-    return arr.filter((item, pos) => arr.indexOf(item) === pos)
 }
 
 export default {
@@ -182,8 +146,5 @@ export default {
     groupBy,
     removeNoIncludes,
     shuffle,
-    shuffleArrayFromIndex,
-    removeDuplicates,
-    flatMap,
-    unique
+    removeDuplicates
 }

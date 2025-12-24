@@ -34,103 +34,7 @@ video::-webkit-media-controls-panel-container {
         display: none;
     }
 
-    &__youtube{
-        position: fixed;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-
-        iframe{
-            pointer-events: none;
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: -300px;
-            border: 0;
-            transform-origin: left top;
-
-            &.minimize{
-                transform: scale(0.5);
-            }
-        }
-
-        &-line-top,
-        &-line-bottom{
-            position: fixed;
-            left: 0;
-            right: 0;
-            height: 7em;
-            background-color: #000;
-            display: none;
-        }
-
-        &-line-top{
-            top: 0;
-        }
-
-        &-line-bottom{
-            bottom: 0;
-        }
-
-        &-icon{
-            width: 9em !important;
-            height: 7em !important;
-            margin-bottom: 1em;
-        }
-
-        &-noplayed{
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 50%;
-            text-align: center;
-            font-size: 1.2em;
-            padding: 0 2em;
-            line-height: 1.5;
-            transform: translateY(-60%);
-
-            div{
-                max-width: 30em;
-                margin: 0 auto;
-            }
-        }
-
-        &-needclick{
-            position: fixed;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            background-color: #000;
-
-            > img{
-                position: fixed;
-                top: 0%;
-                left: 0%;
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                opacity: 0.3;
-            }
-
-            > div{
-                position: fixed;
-                left: 0;
-                top: 0;
-                right: 0;
-                top: 50%;
-                text-align: center;
-                font-size: 1.2em;
-                padding: 0 2em;
-                line-height: 1.5;
-            }
-        }
-
-        &.ended iframe{
-            opacity: 0;
-        }
-    }
+    // REMOVED: &__youtube block - YouTube functionality removed
 
     &__subtitles{
         position: fixed;
@@ -233,8 +137,7 @@ body.platform--nw,
 body.glass--style.platform--apple,
 body.glass--style.platform--apple_tv,
 body.glass--style.platform--android{
-    .player-video__paused,
-    .player-video__loader{
+    .player-video__paused{
         background-color: rgba(0,0,0,0.3);
         backdrop-filter: blur(1em);
     }

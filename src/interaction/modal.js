@@ -1,47 +1,23 @@
 import Template from './template'
 import Scroll from './scroll'
-import Controller from '../core/controller'
-import DeviceInput from './device_input'
-import Layer from '../core/layer'
-import Platform from '../core/platform'
-import Subscribe from '../utils/subscribe'
-import HeadBackward from './head/backward'
+import Controller from '../interaction/controller'
+import DeviceInput from '../utils/device_input'
+import Layer from '../utils/layer'
+import HeadBackward from './head_backward'
+import Platform from '../utils/platform'
 
 let html,
     active,
     scroll,
-    last,
-    opened = false
+    last
 
-let listener = Subscribe()
-
-/**
- * Открывает модальное окно
- * @param {object} params - параметры окна
- * @param {string} params.title - заголовок окна
- * @param {jQuery|HTMLElement} params.html - содержимое окна
- * @param {string} [params.size=small] - размер окна (small, medium, large, full)
- * @param {boolean} [params.overlay=false] - отображать окно как оверлей
- * @param {string} [params.align=top] - выравнивание окна (top, center)
- * @param {boolean} [params.mask=false] - отображать маску прокрутки
- * @param {Array} [params.buttons] - массив кнопок внизу окна {name: 'Имя', onSelect: function(){}}
- * @param {string} [params.buttons_position=inside] - положение кнопок (inside, outside)
- * @param {HTMLElement|jQuery} [params.select] - элемент для фокуса после открытия
- * @param {function} [params.onBack] - вызывается при закрытии окна
- * @param {function} [params.onSelect] - вызывается при выборе элемента внутри окна
- * @param {number} [params.zIndex] - z-index окна
- * @returns {void}
- */
 function open(params){
     active = params
-    active.open_time = Date.now()
-
-    listener.send('preshow', {active})
 
     html = Template.get('modal',{title: params.title})
 
-    html.on('mousedown',(e)=>{
-        if(!$(e.target).closest($('.modal__content', html)).length && DeviceInput.canClick(e.originalEvent) && active.open_time + 1000 < Date.now()) Controller.back()
+    html.on('click',(e)=>{
+        if(!$(e.target).closest($('.modal__content',html)).length && DeviceInput.canClick(e.originalEvent)) Controller.back()
     })
 
     title(params.title)
@@ -54,11 +30,25 @@ function open(params){
 
     if(params.zIndex) html.css('z-index', params.zIndex)
 
-    scroll = new Scroll({over: true, mask: params.mask, ...params.scroll})
+    scroll = new Scroll({over: true, mask: params.mask})
 
-    html.find('.modal__content').toggleClass('layer--height', params.size == 'full' ? true : false)
+    scroll.render().toggleClass('layer--height', params.size == 'full' ? true : false)
 
     html.find('.modal__body').append(scroll.render())
+
+    if(Platform.screen('mobile') && params.size !== 'full'){
+        let close_button = $(`<div class="modal__close-button"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3.51477" y="0.686279" width="28" height="4" rx="2" transform="rotate(45 3.51477 0.686279)" fill="currentColor"/>
+            <rect width="28" height="4" rx="2" transform="matrix(-0.707107 0.707107 0.707107 0.707107 20.4854 0.686279)" fill="currentColor"/>
+            </svg>
+        </div>`)
+
+        close_button.on('click',()=>{
+            Controller.back()
+        })
+
+        html.find('.modal__content').prepend(close_button)
+    }
 
     bind(params.html)
 
@@ -66,8 +56,8 @@ function open(params){
         roll(step > 0 ? 'down' : 'up')
     }
 
-    if(params.size == 'full' && Platform.mouse()){
-        html.find('.modal__content').prepend(HeadBackward(params.title || ''))
+    if(params.size == 'full' && Platform.screen('mobile')){
+        scroll.append(HeadBackward(params.title || ''))
     }
 
     scroll.append(params.html)
@@ -86,37 +76,13 @@ function open(params){
 
     max()
 
-    listener.send('fullshow', {active, html})
-
     toggle(params.select)
 
     html.addClass('animate')
-
-    opened = true
 }
 
 function max(){
-    let height = window.innerHeight
-
-    if(window.innerWidth <= 480){
-        if(active.size == 'full'){
-            height = window.innerHeight - html.find('.head-backward').outerHeight()
-
-            scroll.render().css('height', height + 'px')
-        }
-        else{
-            height = window.innerHeight * 0.6
-        }
-    } 
-    else{
-        height -= scroll.render().offset().top
-
-        if(active.size !== 'full') height -= window.innerHeight * 0.1
-
-        if(active.buttons && active.buttons_position == 'outside') height -= html.find('.modal__footer').outerHeight() || 0
-    }
-
-    scroll.render().find('.scroll__content').css('max-height',  Math.round(height) + 'px')
+    scroll.render().find('.scroll__content').css('max-height',  Math.round(window.innerWidth <= 480 ? window.innerHeight * 0.6 : window.innerHeight - scroll.render().offset().top - (window.innerHeight * 0.1)) + 'px')
 }
 
 function buttons(){
@@ -127,24 +93,21 @@ function buttons(){
 
         btn.text(button.name)
 
-        btn.on('click hover:enter',(e)=>{
-            if(DeviceInput.noDubleClick(e)) button.onSelect()
+        btn.on('click hover:enter',()=>{
+            button.onSelect()
         })
 
         footer.append(btn)
     })
 
-    if(active.buttons_position == 'outside'){
-        html.find('.modal__content').append(footer)
-    }
-    else scroll.append(footer)
+    scroll.append(footer)
 }
 
 function bind(where){
     where.find('.selector').on('hover:focus',(e)=>{
         last = e.target
 
-        scroll.update($(e.target), active.scroll_to_center)
+        scroll.update($(e.target))
     }).on('hover:enter',(e)=>{
         last = e.target
 
@@ -188,23 +151,12 @@ function toggle(need_select){
             Controller.collectionFocus(need_select || last,scroll.render())
 
             Layer.visible(scroll.render(true))
-
-            listener.send('toggle', {active, html})
         },
         up: ()=>{
-            if(active.buttons && active.buttons_position == 'outside' && (scroll.isEnd() || !scroll.isFilled())){
-                Controller.toggle('modal')
-
-                roll('up')
-            }
-            else roll('up')
+            roll('up')
         },
         down: ()=>{
-            if(active.buttons && active.buttons_position == 'outside' && (scroll.isEnd() || !scroll.isFilled())){
-                Controller.collectionSet(html.find('.modal__footer'))
-                Controller.collectionFocus(false, html.find('.modal__footer'))
-            }
-            else roll('down')
+            roll('down')
         },
         right: ()=>{
             if(Navigator.canmove('right')) Navigator.move('right')
@@ -233,15 +185,13 @@ function update(new_html){
 
     max()
 
-    listener.send('update', {active, html, new_html})
-
     toggle(active.select)
 }
 
 function title(tit){
     html.find('.modal__title').text(tit)
     
-    html.toggleClass('modal--empty-title', !tit  ? true : false)
+    html.toggleClass('modal--empty-title',tit ? false : true)
 }
 
 function destroy(){
@@ -250,10 +200,6 @@ function destroy(){
     scroll.destroy()
 
     html.remove()
-
-    listener.send('close', {active})
-
-    opened = false
 }
 
 function close(){
@@ -265,13 +211,11 @@ function render(){
 }
 
 export default {
-    listener,
     open,
     close,
     update,
     title,
     toggle,
     render,
-    scroll: ()=>scroll,
-    opened: ()=>opened
+    scroll: ()=>scroll
 }

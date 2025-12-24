@@ -30,15 +30,18 @@
         font-weight: 600;
         align-items: center;
         white-space: nowrap;
+        flex-wrap: wrap;
+
+        > *{
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
 
         @media screen and (max-width: $media_md) {
             > *{
-                margin: 0.3em 0.3em 0 0 !important;
+                width: 33.3%;
+                margin: 0.3em 0 0 0 !important;
             }
-        }
-
-        @media screen and (max-width: $media_sm) {
-            flex-wrap: wrap;
         }
     }
 
@@ -47,14 +50,10 @@
     }
 
     &__tracker{
-        margin-right: 1em;
+        margin-right: auto;
         overflow: hidden;
         text-overflow: ellipsis;
-        flex-grow: 1;
-
-        @media screen and (max-width: $media_sm) {
-            width: 80%;
-        }
+        max-width: 11em;
     }
 
     &__size{
@@ -62,10 +61,6 @@
         border-radius: 0.3em;
         color: #000;
         padding: 0.3em 0.5em;
-
-        @media screen and (max-width: $media_sm) {
-            margin-left: auto !important;
-        }
     }
 
     &__bitrate,

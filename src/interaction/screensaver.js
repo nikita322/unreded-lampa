@@ -1,17 +1,12 @@
 import Subscribe from '../utils/subscribe'
-import Keypad from "../core/keypad"
-import Storage from "../core/storage/storage"
+import Keypad from "./keypad"
+import Storage from "../utils/storage"
 
 import Nature from './screensaver/nature'
 import Chrome from './screensaver/chrome'
-import Cub from './screensaver/cub'
+// REMOVED: import Cub - CUB screensaver feature removed
 import Aerial from './screensaver/aerial'
 
-/**
- * Скринсейвер
- * @class
- * @returns {Screensaver}
- */
 class Screensaver{
     constructor(){
         this.listener = Subscribe()
@@ -28,7 +23,7 @@ class Screensaver{
         this.class_list = {
             nature: Nature,
             chrome: Chrome,
-            cub: Cub,
+            // REMOVED: cub: Cub - CUB screensaver feature removed
             aerial: Aerial
         }
     }

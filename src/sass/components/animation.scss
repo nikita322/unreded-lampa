@@ -72,18 +72,6 @@
     }
 }
 
-@keyframes animation-opacity-blink {
-    0%{
-        opacity: 0;
-    }
-    50% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-
 @keyframes animation-zoom-down {
     0%{
         transform: scale(1.2);
@@ -114,11 +102,9 @@
 @keyframes animation-down {
     0%{
         transform: translate3d(0,0,0);
-        opacity: 1;
     }
     100% {
         transform: translate3d(0,50%,0);
-        opacity: 0;
     }
 }
 
@@ -218,9 +204,6 @@ body.advanced--animation:not(.no--animation){
     .modal.animate .modal__content{
         animation: animation-modal 0.3s;
     }
-    .modal.modal--full.animate .modal__content{
-        animation: animation-from-below 0.3s;
-    }
 
     .full-start__background.loaded{
         animation: animation-full-background 0.3s
@@ -228,16 +211,6 @@ body.advanced--animation:not(.no--animation){
 
     .activity:not(.activity--load) .activity__body{
         animation: animation-activity 0.2s;
-    }
-
-    .animate{
-        &-opacity{
-            animation: animation-opacity 0.3s
-        }
-
-        &-up-content{
-            animation: animation-activity 0.2s
-        }
     }
 }
 

@@ -18,19 +18,13 @@ export default class IndexedDB {
         if(this.logs) console.log('DB', this.database_name + (store_name ? '_' + store_name : '') + (key ? ' -> [' + key + ']' : ''), err)
     }
 
-    /**
-     * Открытие базы данных
-     * @returns {Promise<void>}
-     */
     openDatabase() {
         return new Promise((resolve, reject) => {
-            let Base = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB;
-
-            if (!Base) return this.log('Not supported'),reject('Not supported')
+            if (!('indexedDB' in window)) return this.log('Not supported'),reject('Not supported')
 
             if(!this.tables.length) return this.log('No tables'),reject('No tables')
 
-            const request = Base.open(this.database_name, this.version)
+            const request = indexedDB.open(this.database_name, this.version)
 
             request.onerror = (event)=> {
                 this.log(request.error || 'An error occurred while opening the database')
@@ -60,13 +54,6 @@ export default class IndexedDB {
         })
     }
 
-    /**
-     * Добавление данных в таблицу
-     * @param {string} store_name - Название таблицы
-     * @param {string} key - Ключ записи
-     * @param {any} value - Значение записи
-     * @returns {Promise<void>}
-     */
     addData(store_name,key, value) {
         return new Promise((resolve, reject) => {
             if (!this.db) {
@@ -87,15 +74,7 @@ export default class IndexedDB {
         })
     }
 
-    /**
-     * Получение данных из таблицы
-     * @param {string} store_name - Название таблицы
-     * @param {string} key - Ключ записи, если не указан, вернет все записи
-     * @param {number} life_time - Время жизни записи в минутах. -1 - без ограничений
-     * @param {boolean} return_meta - Возвращать мета данные (ключ, время) вместе со значением
-     * @returns {Promise<any>}
-     */
-    getData(store_name, key, life_time = -1, return_meta = false) {
+    getData(store_name, key, life_time = -1) {
         return new Promise((resolve, reject) => {
             if (!this.db) {
                 return this.log('Database not open',store_name,key),reject('Database not open')
@@ -116,13 +95,13 @@ export default class IndexedDB {
                 
                 if (result) {
                     if(key){
-                        if(life_time == -1) resolve(return_meta ? result : result.value)
+                        if(life_time == -1) resolve(result.value)
                         else{
-                            if(Date.now() < result.time + (life_time * 1000 * 60)) resolve(return_meta ? result : result.value)
+                            if(Date.now() < result.time + (life_time * 1000 * 60)) resolve(result.value)
                             else resolve(null);
                         }
                     }
-                    else resolve(return_meta ? result : result.map(r=>r.value))
+                    else resolve(result.map(r=>r.value))
                 } else {
                     resolve(null)
                 }
@@ -130,29 +109,14 @@ export default class IndexedDB {
         })
     }
 
-    /**
-     * Получение данных из таблицы без ошибки
-     * @param {string} store_name - Название таблицы
-     * @param {string} key - Ключ записи
-     * @param {number} life_time - Время жизни записи в минутах. -1 - без ограничений
-     * @param {boolean} return_meta - Возвращать мета данные (ключ, время) вместе со значением
-     * @returns {Promise<any>}
-     */
-    getDataAnyCase(store_name, key, life_time, return_meta = false) {
+    getDataAnyCase(store_name, key, life_time){
         return new Promise((resolve, reject) => {
-            this.getData(store_name, key, life_time, return_meta).then(resolve).catch(()=>{
+            this.getData(store_name, key, life_time).then(resolve).catch(()=>{
                 resolve(null)
             })
         })
     }
 
-    /**
-     * Обновление данных в таблице
-     * @param {string} store_name - Название таблицы
-     * @param {string} key - Ключ записи
-     * @param {any} value - Новое значение записи
-     * @returns {Promise<void>}
-     */
     updateData(store_name, key, value) {
         return new Promise((resolve, reject) => {
             if (!this.db) {
@@ -194,13 +158,6 @@ export default class IndexedDB {
         })
     }
 
-    /**
-     * Перезапись данных в таблице (если нет, то создаст новую запись)
-     * @param {string} store_name - Название таблицы
-     * @param {string} key - Ключ записи
-     * @param {any} value - Новое значение записи
-     * @returns {Promise<void>}
-     */
     rewriteData(store_name, key, value){
         return new Promise((resolve, reject) => {
             if (!this.db) {
@@ -219,14 +176,14 @@ export default class IndexedDB {
 
             addRequest.onsuccess = resolve
         })
+
+        return new Promise((resolve, reject) => {
+            this.getData(store_name, key).then(ready=>{
+                return ready ? this.updateData(store_name, key, value) : this.addData(store_name, key, value)
+            }).then(resolve).catch(reject)
+        })
     }
 
-    /**
-     * Удаление данных из таблицы
-     * @param {string} store_name - Название таблицы
-     * @param {string} key - Ключ записи
-     * @returns {Promise<void>}
-     */
     deleteData(store_name, key) {
         return new Promise((resolve, reject) => {
             if (!this.db) {
@@ -247,11 +204,6 @@ export default class IndexedDB {
         })
     }
 
-    /**
-     * Очистка таблицы
-     * @param {string} store_name - Название таблицы
-     * @returns {Promise<void>}
-     */
     clearTable(store_name) {
         return new Promise((resolve, reject) => {
             if (!this.db) {
@@ -274,10 +226,6 @@ export default class IndexedDB {
         })
     }
 
-    /**
-     * Очистка всех таблиц
-     * @returns {Promise<void>}
-     */
     clearAll() {
         return new Promise((resolve, reject) => {
             if (!this.db) {

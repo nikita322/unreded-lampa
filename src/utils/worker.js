@@ -6,13 +6,10 @@ import Blur from './blur.js'
 
 let agent = navigator.userAgent.toLowerCase()
 
-function WebWorker(worker, nosuport){
+function WebWorker(worker){
     let callback = false
-    let timer
         
     worker.onmessage = (data) => {
-        clearTimeout(timer)
-
         if(callback){
             callback(data)
             callback = false
@@ -23,10 +20,6 @@ function WebWorker(worker, nosuport){
         callback = call
 
         worker.postMessage(data)
-
-        timer = setTimeout(()=>{
-            nosuport.call(data, call)
-        }, 1500)
     }
 }
 
@@ -36,7 +29,7 @@ function createWorker(extend, nosuport){
     if(agent.indexOf("netcast") > -1 || agent.indexOf("maple") > -1) return nosuport || {call:()=>{}}
 
     try{
-        worker = new WebWorker(new extend(), nosuport || {call:()=>{}})
+        worker = new WebWorker(new extend())
     }
     catch(e){
         worker = nosuport || {call:()=>{}}

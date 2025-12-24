@@ -1,24 +1,26 @@
-import Storage from '../core/storage/storage'
+import Storage from '../utils/storage'
 import Modal from './modal'
-import Controller from '../core/controller'
-import Utils from '../utils/utils'
+import Controller from './controller'
+import Utils from '../utils/math'
 import Template from './template'
 import Arrays from '../utils/arrays'
 import Player from '../interaction/player'
 import Timeline from '../interaction/timeline'
-import Activity from './activity/activity'
+import Activity from '../interaction/activity'
 import Torserver from '../interaction/torserver'
-import Api from '../core/api/api'
-import Android from '../core/android'
-import Favorite from '../core/favorite'
-import Platform from '../core/platform'
+import Api from './api'
+import Android from '../utils/android'
+import Favorite from '../utils/favorite'
+import Platform from '../utils/platform'
 import Select from './select'
-import Noty from './noty'
-import Lang from '../core/lang'
+// REMOVED: import Noty from './noty' - Notification system removed
+// REMOVED: import Account - CUB account system removed
+import Helper from './helper'
+import Lang from '../utils/lang'
 import Loading from './loading'
 import Request from '../utils/reguest'
 import subsrt from "../utils/subsrt/subsrt";
-import Keypad from '../core/keypad'
+import Keypad from './keypad'
 
 let SERVER = {}
 
@@ -139,8 +141,8 @@ function hash(){
             echo: echo
         })
 
-        if(jac) tpl.find('.is--torlook').remove()
-        else    tpl.find('.is--jackett').remove()
+        // REMOVED: TorLook - always use Jackett
+        tpl.find('.is--torlook').remove()
 
         Modal.update(tpl)
     })
@@ -247,7 +249,7 @@ function parseSubs(path, files){
 
         return {
             label: label,
-            url: Torserver.stream(a.path, SERVER.hash, a.id).replace('&preload','&play'),
+            url: Torserver.stream(a.path, SERVER.hash, a.id),
             index: index
         }
     })
@@ -274,7 +276,7 @@ function preload(data, run){
         let update = ()=>{    
             network.timeout(2000)
     
-            network.silent(first ? data.url : data.url.replace('&preload', '&stat'), function (res) {
+            network.silent(first ? data.url : data.url.replace('preload', 'stat'), function (res) {
                 let pb = res.preloaded_bytes || 0,
                     ps = res.preload_size || 0,
                     sp = res.download_speed ? Utils.bytesToSize(res.download_speed * 8, true) : '0.0'
@@ -309,7 +311,7 @@ function list(items, params){
     let scroll_to_element
     let first_item
 
-    Lampa.Listener.send('torrent_file',{type:'list_open',items, params})
+    Lampa.Listener.send('torrent_file',{type:'list_open',items})
 
     let folder = ''
 
@@ -325,6 +327,11 @@ function list(items, params){
         let view = Timeline.view(info.hash)
         let item
 
+        // REMOVED: Account.torrentViewed - CUB tracking removed
+        let viewed = function(viewing){
+            // Stub - no cloud tracking
+        }
+
         Arrays.extend(element, {
             season: info.season,
             episode: info.episode,
@@ -337,7 +344,8 @@ function list(items, params){
             timeline: view,
             air_date: '--',
             img: './img/img_broken.svg',
-            exe: exe
+            exe: exe,
+            viewed
         })
 
         if(params.seasons){
@@ -411,7 +419,7 @@ function list(items, params){
 
             if(params.movie.id) Favorite.add('history', params.movie, 100)
 
-            if ((Platform.is('android') || Platform.is('apple_tv')) && playlist.length > 1){
+            if (Platform.is('android') && playlist.length > 1){
                 let trim_playlist = []
 
                 playlist.forEach((elem)=>{
@@ -442,7 +450,7 @@ function list(items, params){
                     callback = false
                 }
 
-                Lampa.Listener.send('torrent_file',{type:'onenter',element,item,items,params})
+                Lampa.Listener.send('torrent_file',{type:'onenter',element,item,items})
             })
         }).on('hover:long',()=>{
             stopAutostart()
@@ -453,10 +461,6 @@ function list(items, params){
                 {
                     title: Lang.translate('time_reset'),
                     timeclear: true
-                },
-                {
-                    title: Lang.translate('time_viewed'),
-                    timefull: true
                 }
             ]
 
@@ -479,12 +483,14 @@ function list(items, params){
                 player: 'lampa'
             })
 
-            menu.push({
-                title: Lang.translate('copy_link'),
-                link: true
-            })
+            if(!Platform.tv()){
+                menu.push({
+                    title: Lang.translate('copy_link'),
+                    link: true
+                })
+            }
 
-            Lampa.Listener.send('torrent_file',{type:'onlong',element,item,menu,items,params})
+            Lampa.Listener.send('torrent_file',{type:'onlong',element,item,menu,items})
 
             Select.show({
                 title: Lang.translate('title_action'),
@@ -504,20 +510,11 @@ function list(items, params){
                         Timeline.update(view)
                     }
 
-                    if(a.timefull){
-                        view.percent  = 100
-                        view.time     = view.duration
-
-                        element.timeline = view
-                        
-                        Timeline.update(view)
-                    }
-
                     if(a.link){
                         Utils.copyTextToClipboard(element.url.replace('&preload','&play'),()=>{
-                            Noty.show(Lang.translate('copy_secuses'))
+                            // REMOVED: Noty.show( - Notification system removed: // Lang.translate('copy_secuses'))
                         },()=>{
-                            Noty.show(Lang.translate('copy_error'))
+                            // REMOVED: Noty.show( - Notification system removed: // Lang.translate('copy_error'))
                         })
                     }
 
@@ -531,7 +528,9 @@ function list(items, params){
                 }
             })
         }).on('hover:focus',()=>{
-            Lampa.Listener.send('torrent_file',{type:'onfocus',element,item,items,params})
+            Lampa.Listener.send('torrent_file',{type:'onfocus',element,item,items})
+
+            Helper.show('torrents_view',Lang.translate('helper_torrents_view'),item)
         }).on('visible',()=>{
             let img = item.find('img')
 
@@ -552,7 +551,7 @@ function list(items, params){
 
         if(!first_item) first_item = item
 
-        Lampa.Listener.send('torrent_file',{type:'render',element,item,items,params})
+        Lampa.Listener.send('torrent_file',{type:'render',element,item,items})
     })
 
     if(items.length == 0) html = Template.get('error',{title: Lang.translate('empty_title'),text: Lang.translate('torrent_parser_nofiles')})

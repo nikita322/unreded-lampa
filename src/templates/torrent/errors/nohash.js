@@ -16,22 +16,13 @@ let html = `<div class="error">
         </ul>
     </div>
 
-    <div class="is--jackett">
-        <div>#{torent_nohash_do}</div>
-        <ul>
-            <li>#{torent_nohash_do_one}</li>
-            <li>#{torent_nohash_do_two}</li>
-            <li>#{torent_nohash_do_three}</li>
-        </ul>
-    </div>
-
-    <div class="is--torlook">
-        <div>#{torent_nohash_do}</div>
-        <ul>
-            <li>#{torent_nohash_do_four}</li>
-            <li>#{torent_nohash_do_five}</li>
-        </ul>
-    </div>
+    <!-- REMOVED: is--torlook section - TorLook service removed -->
+    <div>#{torent_nohash_do}</div>
+    <ul>
+        <li>#{torent_nohash_do_one}</li>
+        <li>#{torent_nohash_do_two}</li>
+        <li>#{torent_nohash_do_three}</li>
+    </ul>
 </div>`
 
 export default html

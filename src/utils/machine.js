@@ -1,28 +1,4 @@
-/**
- * Статическая машина состояний
- * @param {Object} object - Объект состояний и переходов
- * @example
-    let fsm = new StateMachine({
-        state: 'idle', //начальное состояние
-        transitions: {
-            idle: function() {
-                console.log('idle')
-                this.state = 'loading'
-                this.dispath(this.state)
-            },
-            loading: function() {
-                console.log('loading')
-                this.state = 'complete'
-                this.dispath(this.state)
-            },
-            complete: function() {
-                console.log('complete')
-            }
-        }
-    })
-    fsm.start() // запустить машину
- */
-function StateMachine(object){
+function create(object){
     this.state = object.state
 
     this.start = function(){
@@ -40,4 +16,4 @@ function StateMachine(object){
     }
 }
 
-export default StateMachine
+export default create

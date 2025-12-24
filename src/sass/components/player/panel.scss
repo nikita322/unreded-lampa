@@ -44,20 +44,6 @@
                 transform: translateY(-50%) translateX(50%) scale(1.5) !important;
             }
         }
-
-        &-segment{
-            position: absolute;
-            height: 100%;
-            top: 0;
-            border-radius: 5em;
-
-            &--ad{
-                background-color: rgba(252, 198, 60, 0.5);
-            }
-            &--skip{
-                background-color: rgba(110, 219, 255, 0.5);
-            }
-        }
     }
 
     &__peding,
@@ -94,7 +80,6 @@
                 right: 0;
                 transform: translateY(-50%) translateX(50%);
                 font-size: 0.8em;
-                z-index: 1;
             }
         }
     }
@@ -589,12 +574,7 @@ body.true--mobile.orientation--portrait .player-panel{
     }
 }
 
-.player.youtube{
-    .player-video__loader,
-    .player-panel__settings{
-        display: none !important;
-    }
-}
+// REMOVED: .player.youtube styles - YouTube functionality removed
 
 .player.iptv .player-panel{
     &__body{
@@ -604,34 +584,6 @@ body.true--mobile.orientation--portrait .player-panel{
 
         > .player-panel__iptv{
             display: block;
-        }
-    }
-}
-
-.player.player--loading{
-    .player-panel{
-        &__peding,
-        &__position{
-            display: none;
-        }
-
-        &__timeline{
-            &::after{
-                content: '';
-                display: block;
-                background-color: #fff;
-                position: absolute;
-                left: 0%;
-                height: 100%;
-                width: 20%;
-                border-radius: 5em;
-
-                animation-duration: 1s;
-                animation-name: scan;
-                animation-iteration-count: infinite;
-                animation-direction: alternate;
-                animation-timing-function: linear;
-            }
         }
     }
 }

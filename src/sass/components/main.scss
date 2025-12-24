@@ -43,12 +43,6 @@
 * {
     box-sizing: border-box;
     outline: none;
-	-webkit-user-drag: none;
-}
-
-* {
-	-webkit-tap-highlight-color: transparent;
-	-webkit-touch-callout: none; /* чтобы не показывало меню при долгом тапе */
 }
 
 html{
@@ -59,10 +53,6 @@ html{
 *:before{
 	display: inline-block;
 	vertical-align: middle;
-}
-
-*:focus {
-	outline: none !important;
 }
 
 input::placeholder {
@@ -103,7 +93,7 @@ body{
 	-webkit-touch-callout: none !important;
 
 	&.black--style{
-		background: #000 !important;
+		background: #000;
 
 		@media screen and (max-width: $media_xm) {
 			.selectbox__content,
@@ -195,26 +185,6 @@ body.no--animation .background canvas{
 	}
 }
 
-.text-markdow{
-	line-height: 1.6;
-	font-weight: 100;
-	font-size: 1.15em;
-
-	> *:first-child{
-		margin-top: 0;
-	}
-
-	h2,h3,h4,h5{
-		font-size: 1.4em;
-		font-weight: 400;
-	}
-
-	&--compressed-sides{
-		padding-left: $offset;
-		padding-right: $offset;
-	}
-}
-
 .content-loading{
 	position: relative;
 	padding: 5em 0;
@@ -244,81 +214,28 @@ body.keyboard-input--visible .normalization{
 	display: none;
 }
 
-body.ambience--enable,
-body:not(.glass--style).keyboard-input--visible{
+body.ambience--enable{
 	.wrap,
 	.head{
 		display: none;
 	}
 }
 
-.icon--blink:not(.focus){
-	&.animate{
-		background: linear-gradient(45deg, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 40%,rgba(255,255,255,1) 50%,rgba(255,255,255,0) 60%,rgba(255,255,255,0) 100%);
-		background-size: 400% 400%;
-		animation: head-icon-blick 1s ease forwards;
-	}
-}
-.notice--icon.animate svg{
-	transform-origin: 50% 0;
-	animation: head-icon-notice 1s ease forwards;
-}
+// REMOVED: .icon--blink - Premium button removed
+// REMOVED: .notice--icon.animate - Notification system removed
 
 .overhide{
 	overflow: hidden;
 }
 
-.no-shrink{
-	flex-shrink: 0;
-}
-
-/* Фикс для orsay */
 .online-prestige-watched__icon{
 	width: 1.5em;
     height: 1.5em;
 }
 
-@keyframes head-icon-blick {
-	0% {
-		background-position: 0% 50%;
-	}
-	100% {
-		background-position: 100% 50%;
-	}
-}
 
-@keyframes head-icon-notice {
-	0% {
-		transform: rotateZ(0);
-	}
-	10% {
-		transform: rotateZ(30deg);
-	}
-	20% {
-		transform: rotateZ(-30deg);
-	}
-	30% {
-		transform: rotateZ(20deg);
-	}
-	40% {
-		transform: rotateZ(-20deg);
-	}
-	50% {
-		transform: rotateZ(10deg);
-	}
-	60% {
-		transform: rotateZ(-10deg);
-	}
-	70% {
-		transform: rotateZ(5deg);
-	}
-	80% {
-		transform: rotateZ(-5deg);
-	}
-	90% {
-		transform: rotateZ(0);
-	}
-}
+// REMOVED: @keyframes head-icon-blick - Premium button removed
+// REMOVED: @keyframes head-icon-notice - Notification system removed
 
 @keyframes endless-up {
 	0% {

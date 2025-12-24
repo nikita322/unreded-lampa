@@ -32,12 +32,6 @@
             display: none !important;
         }
     }
-
-    &--loading{
-        > div:not(.player-info){
-            pointer-events: none;
-        }
-    }
 }
 
 body.selectbox--open{
@@ -49,18 +43,5 @@ body.selectbox--open{
 body.keyboard-input--visible{
     .player{
         display: none;
-    }
-}
-body.player--viewing{
-    #app{
-        visibility: hidden;
-    }
-}
-
-.player:not(.player--panel-visible){
-    .player-panel,
-    .player-info,
-    .player-footer{
-        visibility: hidden;
     }
 }

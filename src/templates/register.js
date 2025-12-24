@@ -1,4 +1,4 @@
-let html = `<div class="register layer--render layer--visible">
+let html = `<div class="register">
     <div class="register__name"></div>
     <div class="register__counter"></div>
 </div>`

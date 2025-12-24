@@ -1,265 +1,128 @@
-import Define from './utils/define/define'
-import PromisePolyfill from './utils/define/promise'
-import Manifest from './core/manifest'
-import Lang from './core/lang'
-import Platform from './core/platform'
+import Manifest from './utils/manifest'
+import Lang from './utils/lang'
+import Platform from './utils/platform'
 import Render from './interaction/render'
-import Keypad from './core/keypad'
-import Activity from './interaction/activity/activity'
-import Controller from './core/controller'
-import Layer from './core/layer'
+import Keypad from './interaction/keypad'
+import Activity from './interaction/activity'
+import Controller from './interaction/controller'
+import Layer from './utils/layer'
 import Select from './interaction/select'
-import Favorite from './core/favorite'
+import Favorite from './utils/favorite'
 import Background from './interaction/background'
-import Notice from './interaction/notice/notice'
-import NoticeClass from './interaction/notice/class'
-import NoticeClassLampa from './interaction/notice/lampa'
-import Head from './interaction/head/head'
-import Menu from './interaction/menu/menu'
-import Utils from './utils/utils'
+// REMOVED: Notice, NoticeClass, NoticeClassLampa - Notification system removed
+import Head from './components/head'
+import Menu from './components/menu'
+import Utils from './utils/math'
 import Console from './interaction/console'
-import Params from './interaction/settings/params'
-import Input from './interaction/settings/input'
+import Params from './components/settings/params'
+import Input from './components/settings/input'
 import Screensaver from './interaction/screensaver'
-import Android from './core/android'
+import Android from './utils/android'
 import Subscribe from './utils/subscribe'
-import Storage from './core/storage/storage'
+import Storage from './utils/storage'
 import Template from './interaction/template'
-import Component from './core/component'
+import Component from './interaction/component'
 import Reguest from './utils/reguest'
 import Filter from './interaction/filter'
-import Files from './interaction/files_old'
+import Files from './interaction/files'
 import Explorer from './interaction/explorer'
 import Scroll from './interaction/scroll'
-import Empty from './interaction/empty/empty'
+import Empty from './interaction/empty'
 import Arrays from './utils/arrays'
-import Noty from './interaction/noty'
+// REMOVED: Noty - Notification system removed
 import Player from './interaction/player'
 import PlayerVideo from './interaction/player/video'
 import PlayerPanel from './interaction/player/panel'
-import PlayerFooter from './interaction/player/footer'
 import PlayerInfo from './interaction/player/info'
 import PlayerIPTV from './interaction/player/iptv'
 import PlayerPlaylist from './interaction/player/playlist'
 import Timeline from './interaction/timeline'
-import Settings from './interaction/settings/settings'
-import SettingsApi from './interaction/settings/api'
+import LocalTimecodes from './utils/local_timecodes'
+import Settings from './components/settings'
+import SettingsApi from './components/settings/api'
 import Modal from './interaction/modal'
-import Api from './core/api/api'
-import Info from './interaction/info_old'
+import Api from './interaction/api'
+// REMOVED: Cloud, Account, Socket - Cloud sync, CUB account, WebSocket removed
+import Info from './interaction/info'
 import Card from './interaction/card'
-import Account from './core/account/account'
-import Plugins from './core/plugins'
-import Socket from './core/socket'
-import Recomends from './core/recomend'
-import TimeTable from './core/timetable'
-import Broadcast from './interaction/broadcast'
+import Plugins from './utils/plugins'
+import Recomends from './utils/recomend'
+import VideoQuality from './utils/video_quality'
+import TimeTable from './utils/timetable'
+// REMOVED: Broadcast - Broadcast system removed
 import Helper from './interaction/helper'
-import Tizen from './core/tizen'
-import InteractionMain from './interaction/items/old/main'
-import InteractionCategory from './interaction/items/old/category'
-import InteractionLine from './interaction/items/old/line'
+import InteractionMain from './interaction/items/main'
+import InteractionCategory from './interaction/items/category'
+import InteractionLine from './interaction/items/line'
 import Status from './utils/status'
 import LangChoice from './interaction/lang'
-import Extensions from './interaction/extensions/extensions'
+import Extensions from './interaction/extensions'
 import Iframe from './interaction/iframe'
-import Parser from './core/api/sources/parser'
-import TMDB from './core/tmdb/tmdb'
+import Parser from './utils/api/parser'
+import Metadata from './utils/metadata'
 import Base64 from './utils/base64'
 import Loading from './interaction/loading'
-import YouTube from './interaction/youtube'
-import WebOSLauncher from './interaction/webos_launcher'
-import Event from './utils/event'
-import Search from './interaction/search/global'
+// REMOVED: YouTube, Event - YouTube functionality and Event utility removed
+import Search from './components/search'
 import Developer from './interaction/developer'
-import DeviceInput from './interaction/device_input'
+import DeviceInput from './utils/device_input'
 import AppWorker from './utils/worker'
-import Theme from './core/theme'
-import AdManager from './interaction/advert/manager'
+import Theme from './utils/theme'
 import DB from './utils/db'
 import NavigationBar from './interaction/navigation_bar'
 import Endless from './interaction/endless'
 import Color from './utils/color'
 import Cache from './utils/cache'
-import Demo from './core/demo'
+// REMOVED: Demo, Speedtest, VPN, Personal, Iptv - Various unused features removed
 import Torrent from './interaction/torrent'
 import Torserver from './interaction/torserver'
-import Speedtest from './interaction/speedtest'
-import VPN from './core/vpn'
 import Processing from './interaction/processing'
 import ParentalControl from './interaction/parental_control'
-import Personal from './core/personal'
-import Sound from './core/sound'
-import Iptv from './core/iptv'
-import Bell from './interaction/bell'
-import HoverSwitcher from './core/switcher'
-import Ai from './core/api/sources/ai'
-import Mirrors from './core/mirrors'
-import HTTPS from './core/https'
-import Task from './core/loading'
-import App from './interaction/app'
-import LoadingProgress from './interaction/loading_progress'
-import Logs from './interaction/logs'
-import StorageMenager from './interaction/storage_manager'
-import Markers from './core/markers'
-import RemoteHelper from './interaction/remote_helper'
-import DataBase from './interaction/database'
-import Maker from './interaction/maker'
-import MaskHelper from './utils/mask'
-import ContentRows from './core/content_rows'
-import Emit from './utils/emit'
-import Router from './core/router'
-import Timer from './core/timer'
-
-import ServiceTorserver from './services/torrserver'
-import ServiceWatched from './services/watched'
-import ServiceSettings from './services/settings'
-import ServiceLibs from './services/libs'
-import ServiceMetric from './services/metric'
-import ServiceDeveloper from './services/developer'
-import ServiceRemoteFavorites from './services/remote_favorites'
-import ServiceDMCA from './services/dmca'
-import ServiceFPS from './services/fps'
-import ServiceEvents from './services/events'
-
-window.screen_width  = window.innerWidth
-window.screen_height = window.innerHeight
+import Sound from './utils/sound'
+import AppStatus from './interaction/status'
 
 /**
- * Настройки приложения
+ * Настройки движка
  */
-
 if(typeof window.lampa_settings == 'undefined'){
     window.lampa_settings = {}
 }
 
-let torrents_use = true
-let agent        = navigator.userAgent.toLowerCase()
-let conditions   = [
-    agent.indexOf("ipad") > -1 && window.innerWidth == 1920 && window.innerHeight == 1080,
-    agent.indexOf("lampa_client_yasha") > -1,
-    typeof AndroidJS !== 'undefined' && (AndroidJS.appVersion() + '').toLowerCase().indexOf('rustore') > -1 && !localStorage.getItem('parser_use')
-]
-
-// Если есть условия из списка, то отключаем торренты, дабы пройти модерацию в сторе
-if(conditions.indexOf(true) >= 0) torrents_use = false
+let appletv = navigator.userAgent.toLowerCase().indexOf("ipad") > -1 && window.innerWidth == 1920 && window.innerHeight == 1080
 
 Arrays.extend(window.lampa_settings,{
-    // Использовать сокеты для синхронизации данных
-    socket_use: true,
+    // REMOVED: socket_use, socket_url, socket_methods - WebSocket removed
 
-    // Адрес сокета, по умолчанию лампа берет адреса из манифеста
-    socket_url: undefined,
+    account_use: false,    // REMOVED: CUB account system - local-only mode
+    account_sync: false,   // REMOVED: Cloud sync - local-only mode
 
-    // Обрабатывать сообщения сокетов
-    socket_methods: true,
-
-    // Использовать аккаунты CUB
-    account_use: true,
-
-    // Синхронизировать закладки, таймкоды и прочее
-    account_sync: true,
-
-    // Разрешить установку плагинов и расширений
     plugins_use: true,
-
-    // Разрешить использование магазина расширений
     plugins_store: true,
 
-    // Показывать кнопку торрентов
-    torrents_use: torrents_use,
-
-    // Отключить фитчи куба и лампы
-    disable_features: {
-        // Блокировку карточек
-        dmca: false,
-        // Реакции
-        reactions: false,
-        // Обсуждения
-        discuss: false,
-        // ИИ
-        ai: false,
-        // Подписка на уведомления
-        subscribe: false,
-        // Черный список плагинов
-        blacklist: false,
-        // Подписка на актеров
-        persons: false,
-        // Вспомогатиленые сервисы на подписку према
-        ads: false,
-        // Трейлеры
-        trailers: false,
-        // Установка прокси для запросов
-        install_proxy: false
-    },
-
-    // Подключить другие языки интерфейса, по умолчанию только русский и английский
-    lang_use: true,
-
-    // Белая и пушистая лампа, для одобрения модерации
+    torrents_use: appletv ? false : true,
     white_use: false,
 
-    // Режим только для чтения, без кнопок онлайн и расширений
+    lang_use: true,
+
     read_only: false,
 
-    // Добавить список блокировки карточек, пример: [{"id":3566556,"cat":"movie"},...]
     dcma: false,
 
-    // Добавлять в адресную строку название текущего экрана
-    push_state: true,
+    push_state: true
 
-    // Является ли приложение IPTV
-    iptv: false,
-
-    // Показать ленту
-    feed: true,
-
-    // Различные сервисы в приложении
-    services: true,
-
-    // Подключить YouTube API
-    youtube: true,
-
-    // Определять гео по IP, иначе будет RU
-    geo: true,
-
-    // Использовать поиск зеркал
-    mirrors: true,
-
-    // Режим разработчика
-    developer: {
-        enabled: false
-    },
-
-    // Размывать постер для мобильных устройств, эффект стекла
-    blur_poster: true,
-
-    // Скрывать важные параметры в приложении
-    hide_important_params: true,
-
-    // Фикс для виджетов, чтобы не подгружались стили с github
-    fix_widget: window.localStorage.getItem('fix_widget') ? true : false,
+    // REMOVED: iptv: false - IPTV feature removed
 })
 
-
-// Если отключили 
+/**
+ * Для вебось маркета и других маркетов, демо режим, задрали черти.
+ */
 if(window.localStorage.getItem('remove_white_and_demo')){
     window.lampa_settings.demo         = false
     window.lampa_settings.white_use    = false
 }
 
-// Если IPTV, то отключаем все лишнее
-if(window.lampa_settings.iptv){
-    window.lampa_settings.socket_use    = false
-    window.lampa_settings.plugins_store = false
-    window.lampa_settings.plugins_use   = false
-    window.lampa_settings.account_sync  = false
-    window.lampa_settings.torrents_use  = false
-}
+// REMOVED: IPTV settings block - IPTV feature removed
 
-/**
- * Делаем классы доступными в глобальной области видимости
- */
 function initClass(){
     window.Lampa = {
         Listener: Subscribe(),
@@ -271,9 +134,9 @@ function initClass(){
         Params,
         Menu,
         Head,
-        Notice,
-        NoticeClass,
-        NoticeClassLampa,
+        // REMOVED: Notice - Notification system removed
+        // REMOVED: NoticeClass - Notification system removed
+        // REMOVED: NoticeClassLampa - Notification system removed
         Background,
         Favorite,
         Select,
@@ -289,29 +152,28 @@ function initClass(){
         Scroll,
         Empty,
         Arrays,
-        Noty,
+        // REMOVED: Noty - Notification system removed
         Player,
         PlayerVideo,
         PlayerInfo,
         PlayerPanel,
-        PlayerFooter,
         PlayerIPTV,
         PlayerPlaylist,
         Timeline,
+        LocalTimecodes,
         Modal,
         Api,
+        // REMOVED: Cloud, Account, Socket, Broadcast - Various sync/account systems removed
         Settings,
         SettingsApi,
         Android,
         Card,
         Info,
-        Account,
-        Socket,
         Input,
         Screensaver,
         Recomends,
+        VideoQuality,
         TimeTable,
-        Broadcast,
         Helper,
         InteractionMain,
         InteractionCategory,
@@ -319,18 +181,15 @@ function initClass(){
         Status,
         Plugins,
         Extensions,
-        Tizen,
         Layer,
         Console,
         Iframe,
         Parser,
         Manifest,
-        TMDB,
+        Metadata,
         Base64,
         Loading,
-        YouTube,
-        WebOSLauncher,
-        Event,
+        // REMOVED: YouTube, Event, Speedtest, VPN - Various utilities removed
         Search,
         DeviceInput,
         Worker: AppWorker,
@@ -341,97 +200,129 @@ function initClass(){
         Cache,
         Torrent,
         Torserver,
-        Speedtest,
         Processing,
-        ParentalControl,
-        VPN,
-        Bell,
-        StorageMenager,
-        RemoteHelper,
-        Network: new Reguest(),
-        Maker,
-        MaskHelper,
-        ContentRows,
-        Emit,
-        Router,
-        Timer
+        ParentalControl
     }
 }
 
-/**
- * Подготовка приложения к запуску
- */
+function closeApp(){
+    if(Platform.is('android')) Android.exit()
+    if(Platform.is('noname')) window.history.back()
+}
+
+function popupCloseApp(){
+    let controller = Controller.enabled().name
+
+    Modal.open({
+        title: '',
+        align: 'center',
+        zIndex: 300,
+        html: $('<div class="about">'+Lang.translate('close_app_modal')+'</div>'),
+        buttons: [
+            {
+                name: Lang.translate('settings_param_no'),
+                onSelect: ()=>{
+                    Modal.close()
+
+                    Controller.toggle(controller)
+                }
+            },
+            {
+                name: Lang.translate('settings_param_yes'),
+                onSelect: ()=>{
+                    Modal.close()
+
+                    Controller.toggle(controller)
+
+                    closeApp()
+                }
+            }
+        ]
+    })
+}
+
 function prepareApp(){
     if(window.prepared_app) return
 
-    LoadingProgress.init()
+    AppStatus.start()
 
-    document.body.append(Noty.render())
-
-    Platform.init()
-
-    LoadingProgress.status('Platform init')
+    // REMOVED: $('body').append(Noty.render()) - Notification system removed
 
     DeviceInput.init()
 
-    LoadingProgress.status('DeviceInput init')
+    AppStatus.push('DeviceInput init')
+
+    Platform.init()
+
+    AppStatus.push('Platform init')
 
     Params.init()
 
-    LoadingProgress.status('Params init')
+    AppStatus.push('Params init')
 
     Controller.observe()
 
-    LoadingProgress.status('Controller observe init')
+    AppStatus.push('Controller observe init')
 
     Console.init()
 
-    LoadingProgress.status('Console init')
+    AppStatus.push('Console init')
 
     Keypad.init()
 
-    LoadingProgress.status('Keypad init')
+    AppStatus.push('Keypad init')
 
     Layer.init()
 
-    LoadingProgress.status('Layer init')
+    AppStatus.push('Layer init')
 
-    HoverSwitcher.init()
+    Storage.init()
 
-    // Передаем фокус в контроллер
+    AppStatus.push('Storage init')
+
+    /** Передаем фокус в контроллер */
 
     Navigator.follow('focus', (event)=>{
         Controller.focus(event.elem)
     })
 
-    // Выход в начальном скрине
+    /** Выход в начальном скрине */
 
     Keypad.listener.follow('keydown',(e)=>{
         if(window.appready || Controller.enabled().name == 'modal' || (Platform.is('browser') || Platform.desktop())) return
 
-        if (e.code == 8 || e.code == 27 || e.code == 461 || e.code == 10009 || e.code == 88) App.modalClose()
+        if (e.code == 8 || e.code == 27 || e.code == 461 || e.code == 10009 || e.code == 88) popupCloseApp()
     })
 
-    LoadingProgress.status('Subscribe on keydown')
-
-    // Отключаем правый клик
-
+    /** Отключаем правый клик */
     if(window.innerWidth > 1280) window.addEventListener("contextmenu", e => e.preventDefault())
-    
-    App.loadStyle()
 
-    LoadingProgress.status('Loaded styles')
+    /** Если это тач дивайс */
+
+    if(!Platform.screen('tv')) $('body').addClass('touch-device')
+
+    /** Start - загрузка стилей */
+    let old_css = $('link[href="css/app.css"]')
+
+    if(old_css.length){
+        Utils.putStyle([
+            './css/app.css?v' + Manifest.css_version
+        ],()=>{
+            AppStatus.push('PutStyle ' + Manifest.css_version)
+
+            old_css.remove()
+        },()=>{
+            AppStatus.critical('PutStyle ./css/app.css')
+        })
+    }
 
     Layer.update()
 
-    LoadingProgress.status('Prepare ready')
+    AppStatus.push('Prepare ready')
 
     window.prepared_app = true
 }
 
-/**
- * Меню разработчика
- */
 function developerApp(proceed){
     let expect  = true
     let pressed = 0
@@ -464,7 +355,7 @@ function developerApp(proceed){
 
     let keydown = (event)=>{
         if(expect){
-            if(event.keyCode == 38 || event.keyCode == 29460 || event.keyCode == 50400012) check()
+            if(event.keyCode === 38||event.keyCode === 29460||event.keyCode === 50400012) check()
         }
         else{
             document.removeEventListener('keydown', keydown)
@@ -478,383 +369,509 @@ function developerApp(proceed){
     window.addEventListener("keydown", keydown)
 }
 
-/**
- * Старт приложения
- */
 function startApp(){
-    if(window.appready || window.app_time_launch) return
+    if(window.appready) return
 
-    window.app_time_launch = Date.now()
-    window.app_time_end    = 0
+    let start_time = 0
 
-    // Стартуем
+    /** Стартуем */
 
-    LoadingProgress.status('Launching the application')
+    AppStatus.push('Launching the application')
 
     Lampa.Listener.send('app',{type:'start'})
 
-    // Инициализируем классы
+    /** Инициализируем классы */
 
-    Timer.init()
-    LoadingProgress.status('Timer init')
-
-    Storage.init()
-    LoadingProgress.status('Storage init')
-
-    Timeline.init()
-    LoadingProgress.status('Timeline init')
-
-    HTTPS.init()
-    LoadingProgress.status('HTTPS init')
-
-    Mirrors.init()
-    LoadingProgress.status('Mirrors init')
-
-    Personal.init()
-    LoadingProgress.status('Personal init')
-
-    Head.init()
-    LoadingProgress.status('Head init')
-
+    // REMOVED: Personal.init() - Unused Personal module removed
     Settings.init()
-    LoadingProgress.status('Settings init')
-
     Select.init()
-    LoadingProgress.status('Select init')
-
     Favorite.init()
-    LoadingProgress.status('Favorite init')
-
+    LocalTimecodes.init()
     Background.init()
-    LoadingProgress.status('Background init')
-
-    Markers.init()
-    LoadingProgress.status('Markers init')
-
-    Notice.init()
-    LoadingProgress.status('Notice init')
-
-    Bell.init()
-    LoadingProgress.status('Bell init')
-
+    Head.init()
+    // REMOVED: Notice.init() - Notification system removed
     Menu.init()
-    LoadingProgress.status('Menu init')
-
     Activity.init()
-    LoadingProgress.status('Activity init')
-
     Screensaver.init()
-    LoadingProgress.status('Screensaver init')
-
-    Socket.init()
-    LoadingProgress.status('Socket init')
-
-    Account.init()
-    LoadingProgress.status('Account init')
-
+    // REMOVED: Cloud.init() - Cloud sync removed
+    // REMOVED: Socket.init() - WebSocket removed, local-only mode
+    // REMOVED: Account.init() - CUB account system removed
     Extensions.init()
-    LoadingProgress.status('Extensions init')
-
     Plugins.init()
-    LoadingProgress.status('Plugins init')
-
     Recomends.init()
-    LoadingProgress.status('Recomends init')
-
     TimeTable.init()
-    LoadingProgress.status('Timetable init')
-
     Helper.init()
-    LoadingProgress.status('Helper init')
-
-    Tizen.init()
-    LoadingProgress.status('Tizen init')
-
     Player.init()
-    LoadingProgress.status('Player init')
-
     Iframe.init()
-    LoadingProgress.status('Iframe init')
-
     Parser.init()
-    LoadingProgress.status('Parser init')
-
-    WebOSLauncher.init()
-    LoadingProgress.status('WebOSLauncher init')
-
     Theme.init()
-    LoadingProgress.status('Theme init')
-
-    AdManager.init()
-    LoadingProgress.status('AdManager init')
-
     NavigationBar.init()
-    LoadingProgress.status('NavigationBar init')
-
-    Demo.init()
-    LoadingProgress.status('Demo init')
-
-    Speedtest.init()
-    LoadingProgress.status('Speedtest init')
-
+    // REMOVED: Demo.init() - Demo removed
+    // REMOVED: Speedtest.init() - Speedtest removed
+    // REMOVED: VPN.init() - VPN/geo detection removed
     Processing.init()
-    LoadingProgress.status('Processing init')
-
     ParentalControl.init()
-    LoadingProgress.status('ParentalControl init')
 
-    Android.init()
-    LoadingProgress.status('Android init')
+    AppStatus.push('Initialization successful')
 
-    Sound.init()
-    LoadingProgress.status('Sound init')
+    /** Надо зачиcтить, не хорошо светить пароль ;) */
 
-    Iptv.init()
-    LoadingProgress.status('Iptv init')
+    Storage.set('account_password','')
 
-    Logs.init()
-    LoadingProgress.status('Logs init')
+    /** Чтоб не писали по 100 раз */
 
-    Broadcast.init()
-    LoadingProgress.status('Broadcast init')
+    Storage.set('parser_torrent_type', Storage.get('parser_torrent_type') || 'jackett')
 
-    Search.init()
-    LoadingProgress.status('Search init')
-
-    DataBase.init()
-    LoadingProgress.status('DataBase init')
-
-    ContentRows.init()
-    LoadingProgress.status('ContentRows init')
-    
-    // Добавляем источники поиска
-
-    if(window.lampa_settings.account_use && !window.lampa_settings.disable_features.ai) Search.addSource(Ai.discovery())
-
-    LoadingProgress.status('Initialization successful')
-
-    // Выводим информацию о приложении
+    /** Инфа */
 
     let ratio = window.devicePixelRatio || 1
 
-    console.log('App','screen size:', Math.round(window.innerWidth * ratio) + ' / ' + Math.round(window.innerHeight * ratio))
+    console.log('App','screen size:', (window.innerWidth * ratio) + ' / ' + (window.innerHeight * ratio))
     console.log('App','interface size:', window.innerWidth + ' / ' + window.innerHeight)
     console.log('App','pixel ratio:', window.devicePixelRatio)
     console.log('App','user agent:', navigator.userAgent)
-    console.log('App','touch points:', navigator.maxTouchPoints)
     console.log('App','is tv:', Platform.screen('tv'))
     console.log('App','is mobile:', Platform.screen('mobile'))
     console.log('App','is touch:', Utils.isTouchDevice())
     console.log('App','is PWA:', Utils.isPWA())
     console.log('App','platform:', Storage.get('platform', 'noname'))
-    console.log('App','version:', Manifest.app_version)
-    console.log('App','build date:', '{__APP_BUILD__}')
-    console.log('App','hash', '{__APP_HASH__}')
-    console.log('App','location:', location.href)
 
-    // Записываем uid
+    /** Выход из приложения */
 
-    if(!Storage.get('lampa_uid','')) Storage.set('lampa_uid', Utils.uid())
+    Activity.listener.follow('backward',(event)=>{
+        if(!start_time) start_time = Date.now()
 
-    // Ренедрим лампу
+        let noout = Platform.is('browser') || Platform.desktop()
+
+        if(event.count == 1 && Date.now() > start_time + (1000 * 2) && !noout){
+            let enabled = Controller.enabled()
+
+            Select.show({
+                title: Lang.translate('title_out'),
+                items: [
+                    {
+                        title: Lang.translate('title_out_confirm'),
+                        out: true
+                    },
+                    {
+                        title: Lang.translate('cancel')
+                    }
+                ],
+                onSelect: (a)=>{
+                    if(a.out){
+                        Activity.out()
+
+                        Controller.toggle(enabled.name)
+
+                        closeApp()
+                    }
+                    else{
+                        Controller.toggle(enabled.name)
+                    }
+                },
+                onBack: ()=>{
+                    Controller.toggle(enabled.name)
+                }
+            })
+        }
+    })
+
+
+    /** Ренедрим лампу */
 
     Render.app()
 
-    LoadingProgress.status('Render app')
+    AppStatus.push('Render app')
 
-    // Инициализируем остальные сервисы
+    /** Проверяем уведомления */
 
-    ServiceDeveloper.init()
-    LoadingProgress.status('ServiceDeveloper init')
+    // REMOVED: Notice.drawCount() - Notification system removed
 
-    ServiceTorserver.init()
-    LoadingProgress.status('ServiceTorserver init')
+    AppStatus.push('Notice ready')
 
-    ServiceWatched.init()
-    LoadingProgress.status('ServiceWatched init')
+    // REMOVED: Iptv.init() - IPTV feature removed
 
-    ServiceSettings.init()
-    LoadingProgress.status('ServiceSettings init')
-
-    ServiceMetric.init()
-    LoadingProgress.status('ServiceMetric init')
-
-    ServiceRemoteFavorites.init()
-    LoadingProgress.status('ServiceRemoteFavorites init')
-
-    ServiceDMCA.init()
-    LoadingProgress.status('ServiceDMCA init')
-
-    ServiceFPS.init()
-    LoadingProgress.status('ServiceFPS init')
-
-    ServiceEvents.init()
-    LoadingProgress.status('ServiceEvents init')
-
-    ServiceLibs.init()
-    LoadingProgress.status('ServiceLibs init')
-
-    // Обновляем слои
+    /** Обновляем слои */
 
     Layer.update()
 
-    LoadingProgress.status('Layer update')
+    /** Активируем последнию активность */
 
-    // Сообщаем о готовности
+    setTimeout(Activity.last.bind(Activity),0)
 
-    LoadingProgress.status('Send app ready')
+    AppStatus.push('Run Activity')
 
-    // Лампа полностью готова
+    /** Гасим свет :D */
 
-    window.appready = true
-
-    window.app_time_end = Date.now()
-
-    Lampa.Listener.send('app',{type:'ready'})
-}
-
-/**
- * Показать приложение в любом случае
- */
-function showApp(){
-    LoadingProgress.status('Show app')
-    
-    // Скрытие логотипа
     setTimeout(()=>{
-        if(window.show_app) return
-
-        window.show_app = true
-
-        LoadingProgress.destroy()
+        AppStatus.push('Hide logo')
 
         Keypad.enable()
 
         Screensaver.enable()
 
+        AppStatus.destroy()
+
         $('.welcome').fadeOut(500,()=>{
             $(this).remove()
         })
-    },1000)
+    },0)
 
-    // Старт приложения
-    startApp()
-}
 
-/**
- * Приоритетная загрузка
- */
-function loadTask(){
-    Task.queue((next)=>{
-        LoadingProgress.status('Open cache database')
+    /** End */
 
-        Cache.openDatabase().then(()=>{
-            console.log('Cache', 'worked')
+    /** Start - если это андроид */
 
-            next()
-        }).catch(()=>{
-            console.log('Cache', 'error', 'no open database')
-
-            next()
+    if(Platform.is('android')){
+        Params.listener.follow('button',(e)=>{
+            if(e.name === 'reset_player'){
+                Android.resetDefaultPlayer()
+            }
         })
+
+        Favorite.listener.follow('add,added,remove', (e)=>{
+            Android.updateChannel(e.where)
+        })
+    }
+
+    /** End */
+
+    // REMOVED: Watch tracking section - CUB watch statistics tracking removed
+    // Previously sent view statistics to CUB API when cards were added to history
+    // This feature has been completely removed as part of CUB cleanup
+
+    /** End */
+
+    /** Start - следим за переключением в лайт версию и обновляем интерфейс */
+
+    Storage.listener.follow('change',(e)=>{
+        if(e.name == 'light_version'){
+            $('body').toggleClass('light--version',Storage.field('light_version'))
+
+            Layer.update()
+        }
+
+        if(e.name == 'keyboard_type'){
+            $('body').toggleClass('system--keyboard',Storage.field('keyboard_type') == 'lampa' ? false : true)
+        }
     })
 
-    Task.queue((next)=>{
-        LoadingProgress.status('Storage load reserve')
-        
-        Storage.task(next)
+    /** End */
+
+    /** Start - проверка статуса для торрента */
+
+    let torrent_net = new Reguest()
+
+    function check(name) {
+        if(Platform.is('android') && !Storage.field('internal_torrclient')) return
+
+        let item = $('[data-name="'+name+'"]').find('.settings-param__status').removeClass('active error wait').addClass('wait')
+        let url  = Storage.get(name)
+
+        if(url){
+            torrent_net.timeout(10000)
+
+            let head = {dataType: 'text'}
+            let auth = Storage.field('torrserver_auth')
+
+            if(auth){
+                head.headers = {
+                    Authorization: "Basic " + Base64.encode(Storage.get('torrserver_login')+':'+Storage.get('torrserver_password'))
+                }
+            }
+
+            torrent_net.native(Utils.checkEmptyUrl(Storage.get(name)), ()=>{
+                item.removeClass('wait').addClass('active')
+            }, (a, c)=> {
+                if(a.status == 401){
+                    item.removeClass('wait').addClass('active')
+
+                    // REMOVED: Noty.show( - Notification system removed: // Lang.translate('torrent_error_check_no_auth') + ' - ' + url, {time: 5000})
+                }
+                else{
+                    item.removeClass('wait').addClass('error')
+
+                    // REMOVED: Noty.show( - Notification system removed: // torrent_net.errorDecode(a, c) + ' - ' + url, {time: 5000})
+                }
+            }, false, head)
+        }
+    }
+
+    Storage.listener.follow('change', function (e) {
+        if (e.name == 'torrserver_url') check(e.name)
+        if (e.name == 'torrserver_url_two') check(e.name)
+        if (e.name == 'torrserver_use_link') check(e.value == 'one' ? 'torrserver_url' : 'torrserver_url_two')
     })
 
-    Task.queue((next)=>{
-        LoadingProgress.status('Mirrors initialization')
+    Settings.listener.follow('open', function (e){
+        if(e.name == 'more' && window.location.protocol == 'https:'){
+            $('[data-name="protocol"]',e.body).remove()
+        }
 
-        LoadingProgress.step(2)
+        if(e.name == 'server'){
+            let name = Storage.field('torrserver_use_link') == 'one' ? 'torrserver_url' : 'torrserver_url_two'
 
-        Mirrors.task(next)
+            check(name)
+        }
+        else torrent_net.clear()
+
+        if(e.name == 'interface' && window.lampa_settings.lang_use){
+            $('.settings-param:eq(0)',e.body).on('hover:enter',()=>{
+                LangChoice.open((code)=>{
+                    Modal.open({
+                        title: '',
+                        html: $('<div class="about"><div class="selector">'+Lang.translate('settings_interface_lang_reload')+'</div></div>'),
+                        onBack: ()=>{
+                            window.location.reload()
+                        },
+                        onSelect: ()=>{
+                            window.location.reload()
+                        }
+                    })
+
+                    Storage.set('language', code, true)
+                    Storage.set('tmdb_lang',code, true)
+                },()=>{
+                    Controller.toggle('settings_component')
+                })
+            }).find('.settings-param__value').text(Lang.translate(Lang.codes()[Storage.get('language','ru')]))
+        }
     })
 
-    Task.queue((next)=>{
-        LoadingProgress.status('Plugins initialization')
+    AppStatus.push('Subscriptions are successful')
 
-        LoadingProgress.step(3)
+    /** End */
 
-        Plugins.task(next)
+    /** Добавляем класс платформы */
+
+    $('body').addClass('platform--'+(Platform.get() || 'noname'))
+
+    /** Включаем лайт версию если было включено */
+
+    $('body').toggleClass('light--version',Storage.field('light_version')).toggleClass('system--keyboard',Storage.field('keyboard_type') == 'lampa' ? false : true)
+
+    /** Добавляем hls и dash плагин */
+
+    let video_libs = ['hls/hls.js', 'dash/dash.js']
+
+    video_libs = video_libs.map(lib=>{
+        return './vender/' + lib
     })
 
-    Task.queue((next)=>{
-        LoadingProgress.status('Proxy initialization')
+    AppStatus.push('Connecting libraries')
 
-        LoadingProgress.step(4)
+    Utils.putScript(video_libs,()=>{})
 
-        VPN.task(next)
+    // REMOVED: black-friday plugin loading - Birthday/promotional features removed
+
+    /** Сообщаем о готовности */
+
+    Lampa.Listener.send('app',{type:'ready'})
+
+    AppStatus.push('Send app ready')
+
+    /** Меню готово */
+
+    Menu.ready()
+
+    AppStatus.push('Menu ready')
+
+    /** Лампа полностью готова */
+
+    window.appready = true
+
+    /** Start - активация режима GOD, жмем 🠔🠔 🠕🠕 🠖🠖 🠗🠗 */
+
+    let mask = [37,37,38,38,39,39,40,40],
+        psdg = -1
+
+    Keypad.listener.follow('keydown',(e)=>{
+        if(e.code == 37 && psdg < 0){
+            psdg = 0
+        }
+
+        if(psdg >= 0 && mask[psdg] == e.code) psdg++
+        else psdg = -1
+
+        if(psdg == 8){
+            psdg = -1
+
+            console.log('God','enabled')
+
+            // REMOVED: Noty.show( - Notification system removed: // 'God enabled')
+
+            window.god_enabled = true
+        }
     })
 
-    Task.queue((next)=>{
-        LoadingProgress.status('Account initialization')
+    /** Start - активация полной лампы, жмем 🠔🠔 🠕🠕 🠔🠔 🠕🠕 */
 
-        LoadingProgress.step(5)
+    let mask_full = [37,37,38,38,37,37,38,38],
+        psdg_full = -1
 
-        Account.task(next)
+    Keypad.listener.follow('keydown',(e)=>{
+        if(e.code == 37 && psdg_full < 0){
+            psdg_full = 0
+        }
+
+        if(psdg_full >= 0 && mask_full[psdg_full] == e.code) psdg_full++
+        else psdg_full = -1
+
+        if(psdg_full == 8){
+            psdg_full = -1
+
+            // REMOVED: Noty.show( - Notification system removed: // 'Full enabled')
+
+            window.localStorage.setItem('remove_white_and_demo','true')
+
+            let controller = Controller.enabled().name
+
+            Modal.open({
+                title: '',
+                align: 'center',
+                zIndex: 300,
+                html: $('<div class="about">'+Lang.translate('settings_interface_lang_reload')+'</div>'),
+                buttons: [
+                    {
+                        name: Lang.translate('settings_param_no'),
+                        onSelect: ()=>{
+                            Modal.close()
+
+                            Controller.toggle(controller)
+                        }
+                    },
+                    {
+                        name: Lang.translate('settings_param_yes'),
+                        onSelect: ()=>{
+                            window.location.reload()
+                        }
+                    }
+                ]
+            })
+        }
     })
 
-    Task.secondary(()=>{
-        setTimeout(showApp, 5000)
+    /** Быстрый доступ к закладкам через кнопки */
+
+    let color_keys = {
+        '406':'history',
+        '405':'wath',
+        '404':'like',
+        '403':'book',
+    }
+
+    Keypad.listener.follow('keydown',(e)=>{
+        if(!Player.opened()){
+            if(color_keys[e.code]){
+                let type = color_keys[e.code]
+
+                Activity.push({
+                    url: '',
+                    title: type == 'book' ? Lang.translate('title_book') : type == 'like' ? Lang.translate('title_like'): type == 'history' ? Lang.translate('title_history') : Lang.translate('title_wath'),
+                    component: 'favorite',
+                    type: type,
+                    page: 1
+                })
+            }
+        }
     })
 
-    Task.secondary(()=>{
-        LoadingProgress.status('Loading plugins')
+    /** Обновление состояния карточек каждые 5 минут */
 
-        Plugins.load(showApp)
+    let last_card_update = Date.now()
+    let lets_card_update = ()=>{
+        if(last_card_update < Date.now() - 1000 * 60 * 5){
+            last_card_update = Date.now()
+
+            Activity.renderLayers(true).forEach((layer)=>{
+                let cards = Array.from(layer.querySelectorAll('.card'))
+
+                cards.forEach((card)=>{
+                    Utils.trigger(card, 'update')
+                })
+            })
+        }
+    }
+
+    setInterval(()=>{
+        if(!Player.opened()) lets_card_update()
+    },1000 * 60)
+
+    Player.listener.follow('destroy',()=>{
+        setTimeout(lets_card_update, 1000)
     })
 
-    Task.start()
+    Lampa.Listener.follow('activity',(e)=>{
+        if(e.type == 'archive' && e.object.activity){
+            let cards = Array.from(e.object.activity.render(true).querySelectorAll('.card.focus'))
+
+            cards.forEach((card)=>{
+                Utils.trigger(card, 'update')
+            })
+        }
+    })
+
+    if(Platform.is('android') || Platform.is('browser') || Platform.desktop()){
+        Sound.add('hover',{
+            url: './sound/hover.ogg'
+        })
+
+        Sound.add('enter',{
+            url: './sound/hover.ogg',
+        })
+    }
+
+    AppStatus.push('The application is fully loaded')
+
+    /** End */
 }
 
-/**
- * Загрузка языка
- */
 function loadLang(){
     let code = window.localStorage.getItem('language') || 'ru'
+    let call = ()=>{
+        AppStatus.push('Loading language completed')
 
-    LoadingProgress.step(1)
-    
-    if(['ru','en'].indexOf(code) >= 0) loadTask()
+        /** Принудительно стартовать */
+        setTimeout(startApp,1000*5)
+
+        /** Загружаем плагины и стартуем лампу */
+        Plugins.load(startApp)
+    }
+
+
+    if(['ru','en'].indexOf(code) >= 0) call()
     else{
-        LoadingProgress.status('Loading language')
+        AppStatus.push('Loading language')
 
         $.ajax({
-            url: (location.protocol == 'file:' || Platform.desktop() ? Manifest.github_lampa : './') + 'lang/' + code + '.js',
+            url: './lang/' + code + '.js',
             dataType: 'text',
             timeout: 10000,
             success: (data)=>{
+                let translate = {}
+
                 try{
-                    let translate = {}
-
                     eval((data + '').replace(/export default/g,'translate = ').trim())
-
-                    Lang.AddTranslation(code, translate)
                 }
                 catch(e){}
 
-                loadTask()
+                Lang.AddTranslation(code, translate)
+
+                call()
             },
-            error: loadTask
+            error: call
         })
     }
 }
 
-/**
- * Первая загрузка приложения
- */
 function loadApp(){
-    prepareApp() // Готовим приложение
+    prepareApp()
 
-    // Если язык уже установлен, то запускаем приложение
+
     if(window.localStorage.getItem('language') || !window.lampa_settings.lang_use){
-        // Но сперва ожидаем не вызвали ли пользователь меню разработчика, затем подгружаем язык
         developerApp(loadLang)
     }
     else{
-        // Иначе предлагаем выбрать язык
         LangChoice.open((code)=>{
             Storage.set('language', code, true)
             Storage.set('tmdb_lang',code, true)
@@ -872,7 +889,7 @@ if(!window.fitst_load){
     window.fitst_load = true
 
     initClass()
-    
+
     if(navigator.userAgent.toLowerCase().indexOf('lampa_client') > -1){
         function checkReady(){
             if(window.innerWidth > 0) loadApp()

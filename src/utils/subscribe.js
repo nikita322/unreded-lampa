@@ -1,6 +1,5 @@
-/**
- * Подписка на события
- */
+import Arrays from './arrays'
+
 function Subscribe() {
     this.add = function(type, listener){
         if (this._listeners === undefined) this._listeners = {}
@@ -50,20 +49,17 @@ function Subscribe() {
     this.send = function (type, event = {}) {
         if (this._listeners === undefined) return this
 
-        try{
-            let listeners = this._listeners
-            let listenerArray = listeners[type]
+        let listeners = this._listeners
+        let listenerArray = listeners[type]
 
-            if (listenerArray !== undefined) {
-                let array = listenerArray.slice(0)
+        if (listenerArray !== undefined) {
+            //if(Arrays.isObject(event)) event.target = this
 
-                for (let i = 0, l = array.length; i < l; i++) {
-                    array[i].call(this, event)
-                }
+            let array = listenerArray.slice(0)
+
+            for (let i = 0, l = array.length; i < l; i++) {
+                array[i].call(this, event)
             }
-        }
-        catch(e){
-            console.error('Subscribe', 'send error:', e.message, e.stack)
         }
 
         return this
@@ -74,4 +70,8 @@ function Subscribe() {
     }
 }
 
-export default ()=> new Subscribe()
+function start(){
+    return new Subscribe()
+}
+
+export default start

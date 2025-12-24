@@ -1,12 +1,12 @@
 import Item from "./item"
-import Controller from '../../core/controller'
+import Controller from '../controller'
 import Select from '../select'
-import Lang from '../../core/lang'
-import Storage from '../../core/storage/storage'
-import Themes from '../../core/theme'
-import Manifest from '../../core/manifest'
-import Utils from '../../utils/utils'
-import Account from '../../core/account/account'
+import Lang from '../../utils/lang'
+import Storage from '../../utils/storage'
+import Themes from '../../utils/theme'
+import Manifest from '../../utils/manifest'
+import Utils from '../../utils/math'
+// REMOVED: import Account - CUB account system removed
 
 class Theme extends Item{
     constructor(data, params){
@@ -14,7 +14,8 @@ class Theme extends Item{
 
         this.template = 'extensions_theme'
 
-        this.link = Utils.rewriteIfHTTPS(Utils.protocol() + Manifest.cub_domain + '/extensions/' + this.data.id)
+        // REMOVED: CUB extensions - themes no longer loaded from CUB domain
+        this.link = ''
     }
 
     update(){
@@ -25,13 +26,12 @@ class Theme extends Item{
     }
 
     active(){
-        return Storage.get('cub_theme','') == this.link
+        // REMOVED: CUB themes - always return false as CUB domain is removed
+        return false
     }
 
     visible(){
         super.visible()
-
-        if(this.data.premium) this.premium()
 
         this.img = this.html.querySelector('.extensions__item-image')
 
@@ -39,7 +39,7 @@ class Theme extends Item{
             this.img.classList.add('loaded')
         }
 
-        this.img.src = Utils.fixMirrorLink(Utils.rewriteIfHTTPS(this.data.image))
+        this.img.src = Utils.rewriteIfHTTPS(this.data.image)
 
         this.html.addEventListener('hover:enter',this.menu.bind(this))
     }
@@ -63,8 +63,6 @@ class Theme extends Item{
                 Controller.toggle(controller)
 
                 if(a.toggle){
-                    if(!this.active() && this.data.premium && !Account.hasPremium()) return Lampa.Account.showCubPremium()
-
                     Themes.toggle(this.active() ? '' : this.link)
 
                     this.update()

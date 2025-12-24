@@ -12,7 +12,7 @@
     }
 
     &__body{
-        transition: transform 0.3s;
+        transition: transform $speed;
         will-change: transform;
 
         &.notransition,

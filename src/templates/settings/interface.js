@@ -33,6 +33,11 @@ let html = `<div>
 
     <div class="settings-param-title"><span>#{title_card}</span></div>
 
+    <div class="settings-param selector" data-type="select" data-name="card_interfice_type">
+        <div class="settings-param__name">#{settings_interface_card_interfice}</div>
+        <div class="settings-param__value"></div>
+    </div>
+
     <div class="settings-param selector" data-type="toggle" data-name="card_interfice_poster">
         <div class="settings-param__name">#{settings_interface_card_poster}</div>
         <div class="settings-param__value"></div>
@@ -43,10 +48,7 @@ let html = `<div>
         <div class="settings-param__value"></div>
     </div>
 
-    <div class="settings-param selector" data-type="toggle" data-name="card_interfice_reactions">
-        <div class="settings-param__name">#{settings_interface_card_reactions}</div>
-        <div class="settings-param__value"></div>
-    </div>
+    <!-- REMOVED: Reactions setting - CUB reactions removed -->
 
     <div class="settings-param-title"><span>#{settings_interface_glass}</span></div>
 
@@ -98,6 +100,18 @@ let html = `<div>
     <div class="settings-param selector" data-type="toggle" data-name="scroll_type">
         <div class="settings-param__name">#{settings_interface_scroll}</div>
         <div class="settings-param__value"></div>
+    </div>
+
+    <div class="settings-param selector" data-type="toggle" data-name="card_views_type">
+        <div class="settings-param__name">#{settings_interface_view_card}</div>
+        <div class="settings-param__value"></div>
+        <div class="settings-param__descr">#{settings_interface_view_card_descr}</div>
+    </div>
+
+    <div class="settings-param selector" data-type="toggle" data-name="hide_outside_the_screen">
+        <div class="settings-param__name">#{settings_interface_hide_outside_the_screen}</div>
+        <div class="settings-param__value"></div>
+        <div class="settings-param__descr">#{settings_interface_hide_outside_the_screen_descr}</div>
     </div>
 </div>`
 

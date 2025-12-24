@@ -1,14 +1,14 @@
 import Item from './item'
 import Reguest from '../../utils/reguest'
-import Lang from '../../core/lang'
-import Plugins from '../../core/plugins'
-import Controller from '../../core/controller'
-import Account from '../../core/account/account'
-import Noty from '../noty'
+import Lang from '../../utils/lang'
+import Plugins from '../../utils/plugins'
+import Controller from '../controller'
+// REMOVED: import Account from '../../utils/account' - CUB feature removed
+// REMOVED: import Noty from '../noty' - Notification system removed
 import Select from '../select'
-import Input from '../settings/input'
+import Input from '../../components/settings/input'
 import Utils from './utils'
-import UtilsOther from '../../utils/utils'
+import UtilsOther from '../../utils/math'
 
 class Extension extends Item {
     constructor(data, params){
@@ -21,8 +21,7 @@ class Extension extends Item {
     visible(){
         super.visible()
 
-        if(this.params.cub)   this.cub()
-        if(this.data.premium) this.premium()
+        // REMOVED: CUB badge display - if(this.params.cub) this.cub()
         if(this.params.autocheck) this.check()
 
         if(Plugins.loaded().indexOf(this.data.url || this.data.link) >= 0) this.html.querySelector('.extensions__item-included').classList.remove('hide')
@@ -51,7 +50,8 @@ class Extension extends Item {
             status: true
         })
 
-        if(this.params.cub || this.params.noedit){
+        // REMOVED: CUB extensions check - simplified to only check noedit
+        if(this.params.noedit){
             if(this.params.type == 'extensions'){
                 menu.push({
                     title: Lang.translate('extensions_install'),
@@ -92,8 +92,8 @@ class Extension extends Item {
                 if(a.toggle){
                     this.data.status = this.data.status == 1 ? 0 : 1
 
-                    if(this.params.cub) Account.Api.pluginToggle(this.data, this.data.status)
-                    else Plugins.save(this.data)
+                    // REMOVED: Account.pluginsStatus() - CUB feature removed
+                    Plugins.save(this.data)
 
                     this.update()
 
@@ -126,7 +126,7 @@ class Extension extends Item {
                                 Plugins.push(this.data)
                             }
                         }
-        
+
                         back()
                     })
                 }
@@ -139,7 +139,7 @@ class Extension extends Item {
                     let ready = Plugins.get().find(b=>b.url == this.data.link)
 
                     if(ready){
-                        Noty.show(Lang.translate('extensions_ready'))
+                        // REMOVED: Noty.show( - Notification system removed: // Lang.translate('extensions_ready'))
 
                         back()
                     }
@@ -188,7 +188,7 @@ class Extension extends Item {
             check.classList.add('hide')
         }
 
-        let url = UtilsOther.fixMirrorLink(UtilsOther.rewriteIfHTTPS(this.data.url || this.data.link))
+        let url = UtilsOther.rewriteIfHTTPS(this.data.url || this.data.link)
 
         this.network.timeout(5000)
         this.network.native(url,(str)=>{

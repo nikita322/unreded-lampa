@@ -1,22 +1,13 @@
 import Template from './template'
 import Select from './select'
-import Search from './search_input'
-import Utils from '../utils/utils'
+import Search from './search'
+import Utils from '../utils/math'
 import Scroll from './scroll'
-import Lang from '../core/lang'
-import Activity from './activity/activity'
-import Storage from '../core/storage/storage'
+import Lang from '../utils/lang'
+import Activity from './activity'
+import Storage from '../utils/storage'
 
-/**
- * Фильтр
- * @param {object} params - параметры фильтра
- * @param {string} params.search - текущий поисковый запрос
- * @param {object} params.movie - информация о фильме/сериале
- * @param {string} params.search_one - основной поисковый запрос
- * @param {string} params.search_two - дополнительный поисковый запрос
- * @returns {Filter} - экземпляр класса Filter
- */
-function Filter(params = {}){
+function create(params = {}){
     let line  = Template.get('filter').addClass('torrent-filter')
     let empty = $('<div class="empty__footer"><div class="simple-button selector">'+Lang.translate('filter_clarify_two')+'</div></div>')
     let data  = {
@@ -301,4 +292,4 @@ function Filter(params = {}){
     }
 }
 
-export default Filter
+export default create

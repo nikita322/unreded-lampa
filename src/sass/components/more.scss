@@ -1,16 +1,13 @@
 .card-more{
-    $self: &;
-
     flex-shrink: 0;
     width: 12.75em;
-    display: flex;
+    margin-bottom: 2em;
 
     &__box{
         transition: transform 0.3s, border-color 0.2s;
-        background: rgba(0, 0, 0, 0.3);
+        background-color: #3E3E3E;
         border-radius: 1em;
-        flex-grow: 1;
-        flex-shrink: 0;
+        padding-bottom: 150%;
         position: relative;
     }
 
@@ -26,7 +23,7 @@
     }
 
     &.focus{
-        #{ $self }__box::after{
+        .card-more__box::after{
             content: "";
             position: absolute;
             top: -0.5em;
@@ -39,25 +36,21 @@
         }
     }
 
-    &--small-radius{
-        #{ $self }__box{
-            border-radius: 0.3em;
-        }
-
-        &.focus{
-            #{ $self }__box{
-                &::after{
-                    border-radius: 0.7em;
-                }
-            }
-        }
-    }
-
-    &--fixed-size{
-        display: block;
+    &--small{
+        width: 10.8em;
     }
 }
 
+.card + .card-more{
+    margin-left: 1em;
+}
+
+.card.card--wide + .card-more .card-more__box{
+    padding-bottom: 177%;
+}
+.card.card--collection + .card-more .card-more__box{
+    padding-bottom: 95%;
+}
 
 @media screen and (min-width: $media_md) {
     body.size--bigger{

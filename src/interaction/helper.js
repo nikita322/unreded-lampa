@@ -1,7 +1,7 @@
-import Storage from '../core/storage/storage'
-import Settings from './settings/settings'
-import Noty from './noty'
-import Lang from '../core/lang'
+import Storage from '../utils/storage'
+import Settings from '../components/settings'
+// REMOVED: import Noty from './noty' - Notification system removed
+import Lang from '../utils/lang'
 
 let html = $(`<div class="helper">
     <div class="helper__body">
@@ -77,7 +77,7 @@ function init(){
 
                 Storage.set('helper',memorys)
 
-                Noty.show(Lang.translate('helper_cleared'))
+                // REMOVED: Noty.show( - Notification system removed: // Lang.translate('helper_cleared'))
             })
         }
     })

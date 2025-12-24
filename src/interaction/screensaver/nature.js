@@ -1,6 +1,5 @@
 import Template from '../template'
-import Utils from '../../utils/utils'
-import Timer from '../../core/timer'
+import Utils from '../../utils/math'
 
 class Nature{
     constructor(){
@@ -11,15 +10,16 @@ class Nature{
     create(){
         this.html = Template.get('screensaver')
 
-        Timer.add(30000, this.next)
+        this.timer = setInterval(this.next.bind(this), 30000)
 
         this.time = Utils.time(this.html)
+        this.time.tik()
 
         this.next()
     }
 
     next(){
-        let image = 'https://picsum.photos/1600/900?v='+Math.random()
+        let image = 'https://source.unsplash.com/1600x900/?nature&order_by=relevant&v='+Math.random()
 
         let to_img = $('.screensaver__slides-'+(this.slide == 'one' ? 'two' : 'one'), this.html)[0]
 
@@ -45,9 +45,9 @@ class Nature{
     }
 
     destroy(){
-        Timer.remove(this.next)
+        clearInterval(this.timer)
 
-        this.time.destroy()
+        clearInterval(this.time.timer)
 
         this.html.remove()
     }

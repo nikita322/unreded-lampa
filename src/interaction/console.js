@@ -1,38 +1,20 @@
-import Utils from '../utils/utils'
+import Utils from '../utils/math'
 import Arrays from '../utils/arrays'
-import Controller from '../core/controller'
-import Keypad from '../core/keypad'
+import Controller from '../interaction/controller'
+import Keypad from '../interaction/keypad'
 import Template from '../interaction/template'
 import Scroll from '../interaction/scroll'
-import Noty from './noty'
+// REMOVED: import Noty from './noty' - Notification system removed
 import Iframe from './iframe'
-import HeadBackward from './head/backward'
-import Lang from '../core/lang'
-import Socket from '../core/socket'
-import Storage from '../core/storage/storage'
-import Timer from '../core/timer'
+import HeadBackward from './head_backward'
+import Lang from '../utils/lang'
 
-let items = {
-    App: [],
-    Errors: [],
-    Warnings: []
-}
-let original = {
-    App: [],
-    Errors: [],
-    Warnings: []
-}
+let items = {}
 let times = 0
 let html
 let scroll_tabs
 let scroll_body
 let last_tab
-
-let console_orig = {
-    log: console.log,
-    error: console.error,
-    warn: console.warn
-}
 
 function init(){
     Keypad.listener.follow('keydown',(e)=>{
@@ -182,35 +164,20 @@ function build(){
     $('body').append(html)
 }
 
-function add(name, message, message_original){
-    if(!items[name]){
-        items[name] = []
-        original[name] = []
-    } 
+function add(name,message){
+    if(!items[name]) items[name] = []
 
-    let where_items = items[name]
-    let where_original = original[name]
+    let where = items[name]
     let time  = Utils.parseTime(Date.now()).time
 
     try{
-        Arrays.insert(where_items, 0, '<div class="console__line selector"><span class="console__time">'+time+'</span> - <span>'+message+'</span></div>')
-        Arrays.insert(where_original, 0, {time: Date.now(), message: message_original})
-
-        if(Storage.get('terminal_access','') && Socket.terminalAccess()){
-            Socket.send('terminal_console', {
-                name: name,
-                time: Date.now(),
-                message: message_original
-            })
-        }
+        Arrays.insert(where, 0, '<div class="console__line selector"><span class="console__time">'+time+'</span> - <span>'+message+'</span></div>')
     }
     catch(e){
-        Arrays.insert(where_items, 0, '<div class="console__line selector"><span class="console__time">'+time+'</span> - <span>Failed to print line</span></div>')
-        Arrays.insert(where_original, 0, {time: Date.now(), message: 'Failed to print line'})
+        Arrays.insert(where, 0, '<div class="console__line selector"><span class="console__time">'+time+'</span> - <span>Failed to print line</span></div>')
     }
 
-    if(where_items.length > 50) where_items.pop()
-    if(where_original.length > 200) where_original.pop()
+    if(where.length > 50) where.pop()
 }
 
 function escapeHtml(text) {
@@ -244,97 +211,57 @@ function decode(arr){
         arr = JSON.stringify(a)
     }
 
+    arr = Utils.shortText(arr,600)
+
     return arr
 }
 
 function follow(){
-  const _get_logger_function = function (func, color, prefix='') {
-        return function() {
-            let msgs = [];
-            let mcon = [];
-            let orgn = [];
+    let log = console.log
 
-            while(arguments.length) {
-                let arr = [].shift.call(arguments)
+    console.log = function(){
+        let msgs = [];
+        let mcon = [];
 
-                msgs.push(Utils.shortText(decode(arr), 600))
-                mcon.push(arr)
-                orgn.push(decode(arr))
-            }
+        while(arguments.length) {
+            let arr = [].shift.call(arguments)
 
-            let name = msgs[0]
-
-            if(msgs.length < 2){
-                name = 'Other'
-            }
-            else{
-                // Add color and prefix to lampa console
-                let spanColor = color || Utils.stringToHslColor(msgs[0], 50, 65)
-                
-                msgs[0] = '<span style="color: '+spanColor+'">' + msgs[0] + '</span>'
-
-                // Add brackets to real log
-                if (mcon.length > 0) {
-                    mcon[0] = '[' + mcon[0] + ']'
-                }
-            }
-
-            if(prefix == 'ERROR' || prefix == 'WARNING'){
-                add(prefix == 'ERROR' ? 'Errors' : 'Warnings', msgs.join(' '), orgn)
-            }
-
-            add(name, msgs.join(' '), orgn)
-
-            func.apply(console,mcon)
+            msgs.push(decode(arr))
+            mcon.push(arr)
         }
+
+        let name = msgs[0]
+
+        if(msgs.length < 2){
+            name = 'Other'
+        }
+        else{
+            msgs[0] = '<span style="color: '+Utils.stringToHslColor(msgs[0], 50, 65)+'">' + msgs[0] + '</span>'
+        }
+
+        add(name,msgs.join(' '))
+
+        log.apply(console,mcon)
     }
-
-    let called = {
-        log: _get_logger_function(console_orig.log, null),
-        error: _get_logger_function(console_orig.error, 'red', 'ERROR'),
-        warn: _get_logger_function(console_orig.warn, 'yellow', 'WARNING')
-    }
-
-    Timer.add(1000, ()=>{
-        // Заменяем консоль на свою
-        console.log   = called.log
-        console.error = called.error
-        console.warn  = called.warn
-    })
-
-    console.log   = called.log
-    console.error = called.error
-    console.warn  = called.warn
     
     window.addEventListener("error", function (e) {
-        e.preventDefault?.()
-
-        let stack    = (e.error && e.error.stack ? e.error.stack : e.stack || '').split("\n").join('<br>')
-        let message  = typeof e.error == 'string' ? e.error : (e.error || e).message
-        let filename = e.filename || (e.error && e.error.fileName ? e.error.fileName : '')
-        let noty     = []
-
-        message && noty.push('Message: ' + message)
-        filename && noty.push('In: ' + filename)
-        stack && noty.push('Stack: ' + stack)
-
-        noty = noty.join('<br><br>')
-
         let welcome = $('.welcome')
 
         if(welcome.length){
             welcome.fadeOut(500,()=>{
-                Noty.show(noty, {time: 8000})
+                // REMOVED: Error notification on app startup - Notification system removed
             })
         }
 
-		add('Errors', noty, noty.replace(/<br>/g, '\n'))
+        let stack   = (e.error && e.error.stack ? e.error.stack : e.stack || '').split("\n").join('<br>')
+        let message = typeof e.error == 'string' ? e.error : (e.error || e).message
 
-        if(!(stack.indexOf('resetTopStyle') >= 0 || stack.indexOf('Blocked a frame') >= 0 || stack.indexOf('global code@http') >= 0)) Noty.show(noty, {time: 8000})
+		add('Script',message + '<br><br>' + stack)
+
+        // REMOVED: if(!(stack.indexOf('resetTopStyle') >= 0 || stack.indexOf('Blocked a frame') >= 0)) Noty.show('Error: ' + message + '<br><br>' + stack, {time: 8000}) - Notification system removed
 	})
 }
 
 export default {
-    init,
-    export: ()=>original
+    init
 }

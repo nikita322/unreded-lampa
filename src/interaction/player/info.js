@@ -1,11 +1,11 @@
 import Template from '../template'
 import Subscribe from '../../utils/subscribe'
-import Utils from '../../utils/utils'
+import Utils from '../../utils/math'
 import Reguest from '../../utils/reguest'
-import Lang from '../../core/lang'
-import Storage from '../../core/storage/storage'
+import Lang from '../../utils/lang'
+import Storage from '../../utils/storage'
 import Torserver from '../torserver'
-import HeadBackward from '../head/backward'
+import HeadBackward from '../head_backward'
 
 let html
 let listener = Subscribe()
@@ -108,7 +108,7 @@ function stat(url){
 
         network.timeout(2000)
 
-        network.silent(url.replace('&preload', '&stat').replace('&play', '&stat'), function (data) {
+        network.silent(url.replace('preload', 'stat').replace('play', 'stat'), function (data) {
             elems.stat.text((data.active_peers || 0) + ' / ' + (data.total_peers || 0) + ' • ' + (data.connected_seeders || 0) + ' ' + Lang.translate('connected_seeds'))
             elems.speed.text(Utils.bytesToSize(data.download_speed ? data.download_speed * 8 : 0, true))
 

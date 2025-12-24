@@ -1,92 +1,34 @@
 import Template from './template'
-import Lang from '../core/lang'
-import Emit from '../utils/emit'
+import Lang from '../utils/lang'
 
-function hasOpaqueBackground(el) {
-    const bg = getComputedStyle(el).backgroundColor;
+function create(params = {}){
+    let card = Template.js('more')
 
-    // Если background-color: transparent
-    if (bg === 'transparent') return false;
+    card.querySelector('.card-more__title').innerText = Lang.translate('more')
 
-    // Если rgba(0, 0, 0, 0) или любая с alpha = 0
-    const match = bg.match(/rgba?\(([^)]+)\)/);
-
-    if (match) {
-        const parts = match[1].split(',').map(p => p.trim());
-        const alpha = parts[3] !== undefined ? parseFloat(parts[3]) : 1;
-        return alpha > 0;
+    if(params.card_small){
+        card.classList.add('card-more--small')
     }
 
-    // Если это rgb(...) или hex — значит непрозрачный
-    return true;
-}
-
-/**
- * Плашка для отображения дополнительной информации или действий.
- * @extends Emit
- * @param {object} params - параметры плашки
- * @param {string} [params.text] - текст плашки
- * @param {string} [params.style=default] - стиль плашки (default, accent, warning, danger)
- * @returns {More} - экземпляр класса More
- */
-
-class More extends Emit{
-    constructor(params = {}){
-        super()
-
-        this.params = params
-    }
-
-    create(){
-        this.html = Template.js('more')
-
-        this.html.find('.card-more__title').html(this.params.text || Lang.translate('more'))
-
-        this.params.style && this.html.addClass('card-more--' + (this.params.style || 'default'))
-
-        this.emit('create')
-    }
-
-    size(target){
-        if(!target) return this.html.find('.card-more__box').style.height = '10em'
-
-        let elements = [target].concat(
-            Array.from(target.querySelectorAll('*'))
-        )
-
-        let max_area = 0
-        let biggest_element = null
-
-        elements.forEach(el => {
-            let rect = el.getBoundingClientRect()
-            let area = rect.width * rect.height
-
-            if (area > max_area && hasOpaqueBackground(el)) {
-                max_area = area
-
-                biggest_element = el
-            }
+    this.create = function(){
+        card.addEventListener('hover:focus',(e)=>{
+            this.onFocus(e.target)
         })
-
-        if(biggest_element){
-            let rect = biggest_element.getBoundingClientRect()
-
-            this.html.style.width  = (rect.width > rect.height ? rect.height : rect.width) + 'px'
-            this.html.find('.card-more__box').style.height = rect.height + 'px'
-
-            this.html.addClass('card-more--fixed-size')
-        }
+        
+        card.addEventListener('hover:enter',(e)=>{
+            this.onEnter(e.target)
+        })
     }
 
-    render(js){
-        return js ? this.html : $(this.html)
+    this.render = function(js){
+        return js ? card : $(card)
     }
 
-    destroy(){
-        this.html.remove()
+    this.destroy = function(){
+        card.remove()
 
-        this.emit('destroy')
+        card = null
     }
 }
 
-export default More
+export default create

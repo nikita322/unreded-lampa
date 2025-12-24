@@ -130,10 +130,6 @@
     }
 }
 
-body.size--bigger .ad-bot__body{
-    height: 21.7em;
-}
-
 .ad-countdown{
     display: flex;
     background-color: rgba(0,0,0,0.3);
@@ -346,12 +342,6 @@ body.size--bigger .ad-bot__body{
         width: 8em;
         height: 8em;
         flex-shrink: 0;
-
-        svg{
-            width: 8em !important;
-            height: 8em !important;
-            border-radius: 0.3em;
-        }
     }
 
     &__label{

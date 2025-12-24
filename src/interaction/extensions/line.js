@@ -1,9 +1,9 @@
 import Template from '../template'
 import Scroll from '../scroll'
-import Controller from '../../core/controller'
-import Layer from '../../core/layer'
+import Controller from '../controller'
+import Layer from '../../utils/layer'
 import Arrays from '../../utils/arrays'
-import Platform from '../../core/platform'
+import Platform from '../../utils/platform'
 
 import ClassExtension from './extension'
 import ClassRecomend from './recomend'
@@ -48,7 +48,7 @@ class Line{
                 return platforms.find(n=>Platform.is(n))
             }
             else return true
-        }).filter(e=>e.premium ? window.lampa_settings.account_use : true).filter(e=>!this.items.find(f=>f.data==e)).forEach(this.append.bind(this))
+        }).slice(0,num || this.view).filter(e=>!this.items.find(f=>f.data==e)).forEach(this.append.bind(this))
     }
 
     visible(){

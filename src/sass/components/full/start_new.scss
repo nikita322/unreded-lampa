@@ -176,18 +176,7 @@
         }
     }
 
-    &__reactions{
-        display: flex;
-        flex-wrap: wrap;
-        margin: -0.5em;
-        margin-bottom: 1em;
-        min-height: 3.6em;
-        align-items: center;
-
-        > div{
-            padding: 0.5em;
-        }
-    }
+    // REMOVED: &__reactions block - CUB reactions removed
 
     &__rate-line{
         display: flex;

@@ -8,23 +8,18 @@
     will-change: opacity;
 
     &__one,
-    &__two,
-    &__fade{
+    &__two{
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
         opacity: 0;
-        transition: opacity 0.5s;
+        transition: opacity 0.4s;
         will-change: opacity;
 
         &.visible{
             opacity: 1;
         }
-    }
-
-    &__fade{
-        opacity: 1;
     }
 }
