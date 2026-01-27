@@ -15,7 +15,7 @@ import Select from '../interaction/select'
 import Torserver from '../interaction/torserver'
 // REMOVED: import Noty from '../interaction/noty' - Notification system removed
 import Parser from '../utils/api/parser'
-import Helper from '../interaction/helper'
+// REMOVED: import Helper from '../interaction/helper' - Helper/hints system removed
 import Lang from '../utils/lang'
 import Metadata from '../utils/metadata'
 import Explorer from '../interaction/explorer'
@@ -1132,7 +1132,7 @@ function component(object){
 
                 scroll.update($(e.target),true)
 
-                Helper.show('torrents',Lang.translate('helper_torrents'),item)
+                // REMOVED: Helper.show('torrents',Lang.translate('helper_torrents'),item) - Helper/hints system removed
             }).on('hover:hover hover:touch',(e)=>{
                 last = e.target
 

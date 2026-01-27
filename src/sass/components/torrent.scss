@@ -1,3 +1,5 @@
+@use "../variables" as *;
+
 .torrent-list{
     padding: 0 $offset;
 }
@@ -647,7 +649,7 @@
         display: inline-block;
         width: 1em;
         height: 1em;
-        background: url(../img/icons/menu/catalog.svg) no-repeat 50% 50%;
+        background: url(../img/icons/catalog.svg) no-repeat 50% 50%;
         background-size: contain;
         margin-right: 0.7em;
         margin-top: -0.3em;

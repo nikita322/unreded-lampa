@@ -621,7 +621,6 @@ function start(data, need, inner){
             })
         }
 
-        // REMOVED: Preroll.show - Preroll ads removed
         Android.openPlayer(data.url, data)
     }
     else if(Platform.desktop() && Storage.field(player_need) == 'other'){
@@ -631,7 +630,6 @@ function start(data, need, inner){
         data.url = data.url.replace('&preload','&play').replace(/\s/g,'%20')
 
         if (file.existsSync(path)) {
-            // REMOVED: Preroll.show - Preroll ads removed
             let spawn = require('child_process').spawn
 
             spawn(path, [data.url])
@@ -682,7 +680,6 @@ function play(data){
     let lauch = ()=>{
         work = data
 
-        // REMOVED: Preroll.show - Preroll ads removed
         Background.theme('black')
 
         preload(data, ()=>{

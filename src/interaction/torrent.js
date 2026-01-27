@@ -15,7 +15,7 @@ import Platform from '../utils/platform'
 import Select from './select'
 // REMOVED: import Noty from './noty' - Notification system removed
 // REMOVED: import Account - CUB account system removed
-import Helper from './helper'
+// REMOVED: import Helper from './helper' - Helper/hints system removed
 import Lang from '../utils/lang'
 import Loading from './loading'
 import Request from '../utils/reguest'
@@ -530,7 +530,7 @@ function list(items, params){
         }).on('hover:focus',()=>{
             Lampa.Listener.send('torrent_file',{type:'onfocus',element,item,items})
 
-            Helper.show('torrents_view',Lang.translate('helper_torrents_view'),item)
+            // REMOVED: Helper.show('torrents_view',Lang.translate('helper_torrents_view'),item) - Helper/hints system removed
         }).on('visible',()=>{
             let img = item.find('img')
 

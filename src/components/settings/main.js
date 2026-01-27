@@ -17,11 +17,6 @@ function Main(){
         // REMOVED: account check - account tab already removed from template
         if(!window.lampa_settings.plugins_use) comp.find('[data-component="plugins"]').remove()
 
-        if(!window.lampa_settings.torrents_use){
-            comp.find('[data-component="parser"]').remove()
-            comp.find('[data-component="server"]').remove()
-        }
-
         scrl.render().css('max-height', window.innerWidth <= 480 ? window.innerHeight * 0.6 : 'unset')
         scrl.append(comp)
         scrl.addSwipeDown(this.swipeAction)

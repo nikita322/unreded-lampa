@@ -1,3 +1,5 @@
+@use "../variables" as *;
+
 .card{
     flex-shrink: 0;
     width: 12.75em;
@@ -128,13 +130,13 @@
 
         &.icon{
             &--book{
-                background-image: url(../img/icons/menu/bookmark.svg);
+                background-image: url(../img/icons/bookmark.svg);
             }
             &--wath{
-                background-image: url(../img/icons/menu/time.svg);
+                background-image: url(../img/icons/time.svg);
             }
             &--like{
-                background-image: url(../img/icons/menu/like.svg);
+                background-image: url(../img/icons/like.svg);
             }
             &--history{
                 background-image: url(../img/icons/settings/player.svg);

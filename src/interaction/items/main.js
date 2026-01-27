@@ -36,9 +36,7 @@ function component(object){
 
             this.next((new_data)=>{
                 this.next_wait = false
-
                 new_data.forEach(this.append.bind(this))
-
                 Layer.visible(items[active+1].render(true))
             },()=>{
                 this.next_wait = false
@@ -55,7 +53,7 @@ function component(object){
             if(step > 0) this.down()
             else if(active > 0) this.up()
         }
-        
+
         scroll.onEnd = this.loadNext.bind(this)
 
         if(this.onLinesBuild) this.onLinesBuild(data)

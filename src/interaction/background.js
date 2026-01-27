@@ -27,11 +27,6 @@ let theme_elem = $('head meta[name="theme-color"]')
 let view = 'one'
 let src  = ''
 let loaded = {}
-let bokeh  = {
-    c: [],
-    h: [],
-    d: true
-}
 let timer
 let timer_resize
 let timer_change
@@ -45,21 +40,6 @@ function init(){
     Storage.listener.follow('change', (event)=>{
         if(event.name == 'background' || event.name == 'background_type') resize()
     })
-
-    let u = './'
-    for (let i = 1; i <= 6; i++) {
-        let im = new Image()
-            im.src = u + 'img/bokeh-h/'+i+'.png'
-
-        bokeh.h.push(im)
-    }
-
-    for (let i = 1; i <= 6; i++) {
-        let im = new Image()
-            im.src = u + 'img/bokeh/'+i+'.png'
-
-        bokeh.c.push(im)
-    }
 
     $(window).on('resize', resize)
 }
@@ -101,29 +81,6 @@ function draw(data, item, noimage){
     let type    = Storage.field('background_type')
 
     blur(data, item, ()=>{
-        if(type == 'complex' && bokeh.d){
-            let bright = Color.rgbToHsl(palette.average[0],palette.average[1],palette.average[2]) 
-
-            item.ctx.globalAlpha = bright[2] > 30 ? bright[2] / 100 * 0.6 : 0.4
-            item.ctx.globalCompositeOperation = bright[2] > 30 ? 'color-dodge' : 'screen'
-            
-            for(let i = 0; i < 10; i++){
-                let bp = Math.round(Math.random() * (bokeh.c.length - 1))
-                let im = bright[2] > 30 ? bokeh.h[bp] : bokeh.c[bp]
-                let xp = window.innerWidth * Math.random(),
-                    yp = (window.innerHeight / 2) * Math.random() + (window.innerHeight / 2),
-                    sz = Math.max(window.innerHeight / 8, window.innerHeight / 5 * Math.random()) * 0.01,
-                    nw = im.width * sz,
-                    nh = im.height * sz
-                
-                try{
-                    item.ctx.drawImage(im, xp - (nw / 2), yp - (nw / 2), nw, nh)
-                }
-                catch(e){}
-            }
-        }
-
-
         item.ctx.globalAlpha = type == 'poster' ? 0.7 : 0.6
         item.ctx.globalCompositeOperation = 'multiply'
 
@@ -171,7 +128,7 @@ function blur(data, item, complite){
 		let nw = img.width * ratio,
 			nh = img.height * ratio;
 
-            item.ctx.globalAlpha = data.img.width > 1000 ? (bokeh.d ? 0.7 : 0.2) : 1
+            item.ctx.globalAlpha = data.img.width > 1000 ? 0.7 : 1
 
             item.ctx.drawImage(img, -(nw-item.canvas[0].width) / 2, -(nh-item.canvas[0].height) / 2, nw, nh)
 
@@ -266,8 +223,6 @@ function load(){
 function change(url = ''){
     if(url == src || Storage.field('light_version')) return
 
-    bokeh.d = true
-
     if(url) src = url
 
     clearTimeout(timer)
@@ -288,8 +243,6 @@ function immediately(url = ''){
     if(url) src = url
 
     clearTimeout(timer)
-
-    bokeh.d = false
 
     immed_time = Date.now()
 

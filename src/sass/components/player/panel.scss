@@ -1,3 +1,5 @@
+@use "../../variables" as *;
+
 .player-panel{
     position: fixed;
     left: $offset;

@@ -1,3 +1,5 @@
+@use "../../variables" as *;
+
 .person-start{
     padding: 0 $offset;
     display: flex;

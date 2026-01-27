@@ -36,6 +36,7 @@ import PlayerPanel from './interaction/player/panel'
 import PlayerInfo from './interaction/player/info'
 import PlayerIPTV from './interaction/player/iptv'
 import PlayerPlaylist from './interaction/player/playlist'
+import PlayerTracks from './interaction/player/tracks'
 import Timeline from './interaction/timeline'
 import LocalTimecodes from './utils/local_timecodes'
 import Settings from './components/settings'
@@ -50,7 +51,7 @@ import Recomends from './utils/recomend'
 import VideoQuality from './utils/video_quality'
 import TimeTable from './utils/timetable'
 // REMOVED: Broadcast - Broadcast system removed
-import Helper from './interaction/helper'
+// REMOVED: Helper - Helper/hints system removed
 import InteractionMain from './interaction/items/main'
 import InteractionCategory from './interaction/items/category'
 import InteractionLine from './interaction/items/line'
@@ -78,7 +79,6 @@ import Torrent from './interaction/torrent'
 import Torserver from './interaction/torserver'
 import Processing from './interaction/processing'
 import ParentalControl from './interaction/parental_control'
-import Sound from './utils/sound'
 import AppStatus from './interaction/status'
 
 /**
@@ -99,12 +99,9 @@ Arrays.extend(window.lampa_settings,{
     plugins_use: true,
     plugins_store: true,
 
-    torrents_use: appletv ? false : true,
     white_use: false,
 
     lang_use: true,
-
-    read_only: false,
 
     dcma: false,
 
@@ -117,7 +114,6 @@ Arrays.extend(window.lampa_settings,{
  * Для вебось маркета и других маркетов, демо режим, задрали черти.
  */
 if(window.localStorage.getItem('remove_white_and_demo')){
-    window.lampa_settings.demo         = false
     window.lampa_settings.white_use    = false
 }
 
@@ -159,6 +155,7 @@ function initClass(){
         PlayerPanel,
         PlayerIPTV,
         PlayerPlaylist,
+        PlayerTracks,
         Timeline,
         LocalTimecodes,
         Modal,
@@ -174,7 +171,7 @@ function initClass(){
         Recomends,
         VideoQuality,
         TimeTable,
-        Helper,
+        // REMOVED: Helper - Helper/hints system removed
         InteractionMain,
         InteractionCategory,
         InteractionLine,
@@ -400,8 +397,9 @@ function startApp(){
     Plugins.init()
     Recomends.init()
     TimeTable.init()
-    Helper.init()
+    // REMOVED: Helper.init() - Helper/hints system removed
     Player.init()
+    PlayerTracks.init()
     Iframe.init()
     Parser.init()
     Theme.init()
@@ -810,16 +808,6 @@ function startApp(){
             })
         }
     })
-
-    if(Platform.is('android') || Platform.is('browser') || Platform.desktop()){
-        Sound.add('hover',{
-            url: './sound/hover.ogg'
-        })
-
-        Sound.add('enter',{
-            url: './sound/hover.ogg',
-        })
-    }
 
     AppStatus.push('The application is fully loaded')
 

@@ -1,3 +1,5 @@
+@use "../../variables" as *;
+
 .full-start-new{
     padding: 0 $offset;
     padding-bottom: 4em;
@@ -27,7 +29,7 @@
 
         @media screen and (max-width: $media_xm) {
             width: auto;
-            margin: 0 -$offset;
+            margin: 0 (-$offset);
         }
     }
 
@@ -39,8 +41,8 @@
         }
 
         @media screen and (max-width: $media_xm) {
-            margin-left: -$offset;
-            margin-right: -$offset;
+            margin-left: (-$offset);
+            margin-right: (-$offset);
             padding: $offset;
             margin-top: -14em;
             margin-top: -20vh;
@@ -123,17 +125,11 @@
         -o-text-overflow: ".";
         text-overflow: ".";
         display: -webkit-box;
-        -webkit-line-clamp: 1;
-        line-clamp: 1;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
         margin-left: -0.03em;
         line-height: 1.3;
-
-        &.twolines{
-            -webkit-line-clamp: 2;
-            line-clamp: 2;
-            font-size: 3.5em;
-        }
 
         @media screen and (max-width: $media_sm) {
             font-size: 2.8em;

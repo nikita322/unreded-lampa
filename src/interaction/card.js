@@ -300,14 +300,21 @@ function Card(data, params = {}){
         if(any_marker){
             if(!marker){
                 marker = document.createElement('div')
-                marker.addClass('card__marker')
-                marker.append(document.createElement('span'))
+                marker.classList.add('card__marker')
 
-                this.card.querySelector('.card__view').append(marker)
+                let span = document.createElement('span')
+                marker.appendChild(span)
+
+                this.card.querySelector('.card__view').appendChild(marker)
             }
 
-            marker.find('span').text(Lang.translate('title_' + any_marker))
-            marker.removeClass(marks.map(m=>'card__marker--' + m).join(' ')).addClass('card__marker--' + any_marker)
+            let span = marker.querySelector('span')
+            if(span) span.textContent = Lang.translate('title_' + any_marker)
+
+            // Remove all marker classes
+            marks.forEach(m => marker.classList.remove('card__marker--' + m))
+            // Add current marker class
+            marker.classList.add('card__marker--' + any_marker)
         }
         else if(marker) marker.remove()
     }

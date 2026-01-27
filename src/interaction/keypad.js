@@ -2,7 +2,6 @@ import Subscribe from '../utils/subscribe'
 import Controller from './controller'
 import Activity from './activity'
 // REMOVED: import Noty from './noty' - Notification system removed
-import Sound from '../utils/sound'
 import Plathorm from '../utils/platform'
 
 let enabled  = false
@@ -75,33 +74,21 @@ function keydownTrigger(e){
 	if(!enabled) return; //отключить все
 
 	if (keycode == 37) {
-		Sound.play('hover')
-
 		Controller.move('left')
 	}
 	if (keycode == 38) {
-		Sound.play('hover')
-
 		Controller.move('up')
 	}
 	if (keycode == 39) {
-		Sound.play('hover')
-
 		Controller.move('right')
 	}
 	if (keycode == 40) {
-		Sound.play('hover')
-
 		Controller.move('down')
 	}
 	if (keycode == 33) {
-		Sound.play('hover')
-
 		Controller.move('toup')
 	}
 	if (keycode == 34) {
-		Sound.play('hover')
-
 		Controller.move('todown')
 	}
 
@@ -195,10 +182,8 @@ function init(){
 
 		if(!longpress){
 			if(isEnter(keyCode(e)) && !e.defaultPrevented){
-				Sound.play('enter')
-
 				Controller.enter()
-			} 
+			}
 		}
 		else longpress = false
 	})

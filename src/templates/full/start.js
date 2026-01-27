@@ -37,10 +37,10 @@ let html = `<div class="full-start">
                     <img src="./img/icons/time.svg" /> <div>{time}</div>
                 </div>
                 <div class="full-start__tag hide is--serial">
-                    <img src="./img/icons/menu/catalog.svg" /> <div>{seasons}</div>
+                    <img src="./img/icons/catalog.svg" /> <div>{seasons}</div>
                 </div>
                 <div class="full-start__tag hide is--serial">
-                    <img src="./img/icons/menu/movie.svg" /> <div>{episodes}</div>
+                    <img src="./img/icons/movie.svg" /> <div>{episodes}</div>
                 </div>
                 <div class="full-start__tag tag--episode hide">
                     <img src="./img/icons/time.svg" /> <div></div>

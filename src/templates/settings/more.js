@@ -40,17 +40,6 @@ let html = `<div>
         <div class="settings-param__value"></div>
     </div>
 
-    <div class="settings-param-title"><span>#{settings_rest_helper}</span></div>
-
-    <div class="settings-param selector" data-type="toggle" data-name="helper">
-        <div class="settings-param__name">#{settings_rest_helper_use}</div>
-        <div class="settings-param__value"></div>
-    </div>
-
-    <div class="settings-param selector helper--start-again" data-static="true">
-        <div class="settings-param__name">#{settings_rest_helper_reset}</div>
-    </div>
-    
     <div class="settings-param-title"><span>#{more}</span></div>
 
     <div class="settings-param selector" data-type="select" data-name="pages_save_total">

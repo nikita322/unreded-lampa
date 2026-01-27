@@ -1,94 +1,72 @@
 @use "sass:math";
+@use 'variables' as *;
 
-$speed: 0.2s;
-
-$offset: 1.5em;
-
-$media_lg: 991px;
-$media_md: 767px;
-$media_sm: 580px;
-$media_xm: 480px;
-$media_xs: 400px;
-
-@import 'components/welcome';
-@import 'components/lang';
-@import 'components/main';
-@import 'components/navigation_bar';
-@import 'components/head_backward';
-@import 'components/wrap';
-@import 'components/head';
-@import 'components/processing';
-@import 'components/navigation-tabs';
-@import 'components/activitys';
-@import 'components/menu';
-@import 'components/background';
-@import 'components/settings';
-// REMOVED: @import 'components/discuss_rules' - CUB discuss removed
-@import 'components/scroll';
-@import 'components/items';
-@import 'components/tag_count';
-// REMOVED: @import 'components/reaction' - CUB reactions removed
-@import 'components/register';
-@import 'components/card';
-@import 'components/card_parser';
-@import 'components/card_watched';
-@import 'components/full/start';
-@import 'components/full/start_new';
-@import 'components/full/descr';
-@import 'components/full/persons';
-@import 'components/full/reviews';
-@import 'components/full/episode';
-@import 'components/card_episode';
-@import 'components/player';
-@import 'components/player/video';
-@import 'components/player/panel';
-@import 'components/player/info';
-@import 'components/player/footer';
-@import 'components/selectbox/box';
-@import 'components/selectbox/item';
-// REMOVED: @import 'components/youtube' - YouTube functionality removed
-// REMOVED: @import 'components/birthday' - Birthday promotions removed
-@import 'components/info';
-@import 'components/more';
-@import 'components/loading_layer';
-@import 'components/category';
-@import 'components/search/main';
-@import 'components/keyboard';
-@import 'components/modal';
-// REMOVED: @import 'components/speedtest' - Speedtest removed
-@import 'components/company';
-@import 'components/person/start';
-@import 'components/empty';
-// REMOVED: @import 'components/account' - CUB account removed
-// REMOVED: @import 'components/cub_premium' - CUB premium removed
-// REMOVED: @import 'components/notice' - Notification system removed
-@import 'components/torrent';
-// REMOVED: @import 'components/feed' - CUB feed system removed
-@import 'components/files';
-@import 'components/explorer';
-@import 'components/bookmarks_folder';
-// REMOVED: about styles - About dialog removed
-@import 'components/error';
-@import 'components/season';
-@import 'components/episode';
-@import 'components/button';
-@import 'components/search/box';
-@import 'components/console';
-@import 'components/timeline';
-// REMOVED: @import 'components/noty' - Notification system removed
-@import 'components/helper';
-@import 'components/nonetwork';
-@import 'components/screensaver';
-@import 'components/plugins_catalog';
-// REMOVED: @import 'components/broadcast' - Broadcast system removed
-// REMOVED: @import 'components/timetable' - Timetable component removed
-@import 'components/extensions';
-@import 'components/smart';
-@import 'components/ad';
-@import 'components/online';
-@import 'components/iframe';
-@import 'components/https';
-@import 'components/touch';
-@import 'components/animation';
-@import 'components/light';
-@import 'components/glass';
+@use 'components/welcome';
+@use 'components/lang';
+@use 'components/main';
+@use 'components/navigation_bar';
+@use 'components/head_backward';
+@use 'components/wrap';
+@use 'components/head';
+@use 'components/processing';
+@use 'components/navigation-tabs';
+@use 'components/activitys';
+@use 'components/menu';
+@use 'components/background';
+@use 'components/settings';
+@use 'components/scroll';
+@use 'components/items';
+@use 'components/tag_count';
+@use 'components/register';
+@use 'components/card';
+@use 'components/card_parser';
+@use 'components/card_watched';
+@use 'components/full/start' as full-start;
+@use 'components/full/start_new';
+@use 'components/full/descr';
+@use 'components/full/persons';
+@use 'components/full/reviews';
+@use 'components/full/episode' as full-episode;
+@use 'components/card_episode';
+@use 'components/player';
+@use 'components/player/video';
+@use 'components/player/panel';
+@use 'components/player/info' as player-info;
+@use 'components/player/footer';
+@use 'components/player/tracks';
+@use 'components/selectbox/box' as selectbox-box;
+@use 'components/selectbox/item';
+@use 'components/info';
+@use 'components/more';
+@use 'components/loading_layer';
+@use 'components/category';
+@use 'components/search/main' as search-main;
+@use 'components/keyboard';
+@use 'components/modal';
+@use 'components/company';
+@use 'components/person/start' as person-start;
+@use 'components/empty';
+@use 'components/torrent';
+@use 'components/files';
+@use 'components/explorer';
+@use 'components/bookmarks_folder';
+@use 'components/error';
+@use 'components/season';
+@use 'components/episode';
+@use 'components/button';
+@use 'components/search/box' as search-box;
+@use 'components/console';
+@use 'components/timeline';
+// REMOVED: @use 'components/helper' - Helper/hints system removed
+@use 'components/nonetwork';
+@use 'components/screensaver';
+@use 'components/plugins_catalog';
+@use 'components/extensions';
+@use 'components/smart';
+@use 'components/online';
+@use 'components/iframe';
+@use 'components/https';
+@use 'components/touch';
+@use 'components/animation';
+@use 'components/light';
+@use 'components/glass';

@@ -1,6 +1,8 @@
+@use "../variables" as *;
+
 .activitys{
     display: flex;
-    
+
     &__slides{
         position: relative;
         width: 100%;

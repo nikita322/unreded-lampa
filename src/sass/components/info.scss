@@ -1,3 +1,5 @@
+@use "../variables" as *;
+
 .info{
     display: flex;
     height: 10em;
@@ -125,13 +127,13 @@
 
         &.icon{
             &--book{
-                background-image: url(../img/icons/menu/bookmark.svg);
+                background-image: url(../img/icons/bookmark.svg);
             }
             &--like{
-                background-image: url(../img/icons/menu/like.svg);
+                background-image: url(../img/icons/like.svg);
             }
             &--wath{
-                background-image: url(../img/icons/menu/time.svg);
+                background-image: url(../img/icons/time.svg);
             }
         }
 

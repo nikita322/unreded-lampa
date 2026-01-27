@@ -5,7 +5,7 @@ import Select from '../../interaction/select'
 import Storage from '../../utils/storage'
 import Arrays from '../../utils/arrays'
 // REMOVED: import Noty from '../../interaction/noty' - Notification system removed
-import Helper from '../../interaction/helper'
+// REMOVED: import Helper from '../../interaction/helper' - Helper/hints system removed
 import Lang from '../../utils/lang'
 import Utils from '../../utils/math'
 
@@ -137,7 +137,7 @@ function edit(params, call){
 
     input_value = params.value
 
-    Helper.show('keyboard',Lang.translate('helper_keyboard'))
+    // REMOVED: Helper.show('keyboard',Lang.translate('helper_keyboard')) - Helper/hints system removed
 
     return keyboard
 }

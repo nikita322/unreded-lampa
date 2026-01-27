@@ -27,8 +27,6 @@ function init(){
     html   = Template.get('menu')
     scroll = new Scroll({mask: true, over: true})
 
-    if(!window.lampa_settings.torrents_use) html.find('[data-action="mytorrents"]').remove()
-
     if(!Lang.selected(['ru','uk','be'])){
         html.find('[data-action="anime"]').remove()
         // REMOVED: [data-action="relise"] - CUB releases removed

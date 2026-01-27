@@ -118,9 +118,9 @@ export default {
     settings_rest_screensaver_use: 'Показывать заставку при бездействии',
     settings_rest_screensaver_type: 'Тип заставки',
     settings_rest_screensaver_time: 'Через сколько минут запустить скринсейвер',
-    settings_rest_helper: 'Подсказки',
-    settings_rest_helper_use: 'Показывать подсказки',
-    settings_rest_helper_reset: 'Показать подсказки снова',
+    // REMOVED: settings_rest_helper - Helper/hints system removed
+    // REMOVED: settings_rest_helper_use - Helper/hints system removed
+    // REMOVED: settings_rest_helper_reset - Helper/hints system removed
     settings_rest_pages: 'Сколько страниц хранить в памяти',
     settings_rest_pages_descr: 'Хранит страницы в том состоянии, в котором вы их покинули.',
     settings_rest_time: 'Сместить время',
@@ -808,10 +808,10 @@ export default {
     settings_param_jackett_interview_healthy: 'Только доступные',
     settings_parser_jackett_interview: 'Опрашивать трекеры',
 
-    helper_keyboard: 'После ввода значения нажмите кнопку «Назад» для сохранения',
-    helper_torrents: 'Удерживайте клавишу (ОК) для вызова контекстного меню',
-    helper_cleared: 'Успешно, подсказки будут показаны заново.',
-    helper_torrents_view: 'Для сброса тайм-кода и вызова меню удерживайте клавишу (ОК)',
+    // REMOVED: helper_keyboard - Helper/hints system removed
+    // REMOVED: helper_torrents - Helper/hints system removed
+    // REMOVED: helper_cleared - Helper/hints system removed
+    // REMOVED: helper_torrents_view - Helper/hints system removed
 
     // REMOVED: fav_sync_title - Cloud sync removed
     // REMOVED: fav_sync_text - Cloud sync removed

@@ -8,7 +8,6 @@ import Platform from '../utils/platform'
 // REMOVED: import Noty from './noty' - Notification system removed
 import Keypad from './keypad'
 import DeviceInput from '../utils/device_input'
-import Sound from '../utils/sound'
 
 let listener = Subscribe()
 

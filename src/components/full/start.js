@@ -30,7 +30,7 @@ function create(data, params = {}){
         if(e.name == 'parser_use'){
             let status = Storage.field('parser_use')
 
-            if(window.lampa_settings.torrents_use) tbtn.toggleClass('selector',status).toggleClass('hide',!status)
+            tbtn.toggleClass('selector',status).toggleClass('hide',!status)
 
             self.groupButtons()
         }
@@ -71,8 +71,6 @@ function create(data, params = {}){
             episodes: data.movie.number_of_episodes,
             tagline: data.movie.tagline,
         })
-
-        if(!window.lampa_settings.torrents_use) html.find('.view--torrent').addClass('hide')
 
         if(new_html && data.movie.name) html.find('.full-start-new__poster').addClass('card--tv').append('<div class="card__type">TV</div>')
 
@@ -251,8 +249,6 @@ function create(data, params = {}){
         let pg = Api.sources.tmdb.parsePG(data.movie)
 
         if(pg) html.find('.full-start__pg').removeClass('hide').text(pg)
-
-        if(window.lampa_settings.read_only) html.find('.button--play').remove()
     }
 
     this.setBtnInPriority = function(btn){

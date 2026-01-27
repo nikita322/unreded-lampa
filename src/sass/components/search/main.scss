@@ -1,3 +1,5 @@
+@use "../../variables" as *;
+
 @keyframes animation-search-input-line {
     0% {
         opacity: 1;
@@ -108,7 +110,7 @@
         width: 1.3em;
         height: 1.3em;
         margin-right: 0.7em;
-        background-image: url(../img/icons/menu/time.svg);
+        background-image: url(../img/icons/time.svg);
         background-size: 100%;
         background-position: center;
         background-repeat: no-repeat;
