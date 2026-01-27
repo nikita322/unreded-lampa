@@ -25,6 +25,8 @@ var babel = require('@rollup/plugin-babel').babel;
 var commonjs = require('@rollup/plugin-commonjs');
 // Add support for importing from node_modules folder like import x from 'module-name'
 var nodeResolve = require('@rollup/plugin-node-resolve');
+// Minification plugin
+var {terser} = require('rollup-plugin-terser');
 
 
 var cache;
@@ -34,13 +36,43 @@ var pubFolder = './public/';
 
 var isDebugEnabled = false;
 
-function merge(done) {
-    let plugins = [babel({
-        babelHelpers: 'bundled',
-        presets: ['@babel/preset-env']
-    }), commonjs, nodeResolve, worker()]
+function merge() {
+    let plugins = [
+        babel({
+            babelHelpers: 'bundled',
+            presets: ['@babel/preset-env']
+        }),
+        commonjs,
+        nodeResolve,
+        worker()
+    ]
 
-    rollup({
+    // Add terser minification in production mode
+    if (!isDebugEnabled) {
+        plugins.push(terser({
+            compress: {
+                drop_console: true,      // Remove console.log
+                drop_debugger: true,     // Remove debugger
+                dead_code: true,         // Remove unreachable code
+                conditionals: true,      // Optimize if-s and conditional expressions
+                evaluate: true,          // Evaluate constant expressions
+                booleans: true,          // Optimize boolean expressions
+                loops: true,             // Optimize loops
+                unused: true,            // Remove unused variables
+                if_return: true,         // Optimize if/return and if/continue
+                join_vars: true,         // Join consecutive var statements
+                reduce_vars: true        // Improve optimization on variables
+            },
+            mangle: {
+                safari10: true           // Safari 10 compatibility
+            },
+            format: {
+                comments: false          // Remove all comments
+            }
+        }))
+    }
+
+    return rollup({
         // Point to the entry file
         input: srcFolder+"app.js",
 
@@ -48,7 +80,7 @@ function merge(done) {
         plugins: plugins,
 
         // Use cache for better performance
-        //cache: cache,
+        cache: cache,
 
         // Note: these options are placed at the root level in older versions of Rollup
         output: {
@@ -64,19 +96,15 @@ function merge(done) {
       })
       .on('bundle', function(bundle) {
         // Update cache data after every bundle is created
-        //cache = bundle;
+        cache = bundle;
       })
 
       // Name of the output file.
       .pipe(source('app.js'))
       .pipe(buffer())
-      //.pipe(uglify())
-      .pipe(replace(/return kIsNodeJS/g, "return false"))
       .pipe(replace(/return kIsNodeJS/g, "return false"))
       // Where to send the output file
       .pipe(dest(pubFolder));
-      
-    done();
 }
 
 function lang_task(){
