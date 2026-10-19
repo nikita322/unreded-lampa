@@ -17,8 +17,6 @@ export default function PlayerScreen(props: ScreenProps) {
     const el = document.createElement('video');
     video = el;
 
-    // CORS-запрос нужен, чтобы поток прошёл COEP require-corp.
-    el.crossOrigin = 'anonymous';
     el.playsInline = true;
     el.style.position = 'absolute';
     el.style.inset = '0';
