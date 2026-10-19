@@ -2,7 +2,7 @@
 export const typography = {
   family: 'Roboto',
   size: {
-    cardTitle: 24,
+    cardTitle: 20,
     status: 32,
   },
   lineHeight: {

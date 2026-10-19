@@ -1,4 +1,5 @@
 import { For, Show, createSignal, onMount } from 'solid-js';
+import type { ShaderRadialGradientProps } from '@solidtv/solid';
 import { push, type ScreenProps } from '../activity';
 import { api } from '../api';
 import { cachedRequest } from '../api/cached';
@@ -38,6 +39,20 @@ const GRID_ROWS = Math.max(
 );
 
 const MAX_CARDS = GRID_COLUMNS * GRID_ROWS;
+
+const POSTER_WIDTH = layout.card.width - 2 * layout.card.focusInset;
+const POSTER_HEIGHT = layout.card.posterHeight - 2 * layout.card.focusInset;
+const GLOW_FADE_START =
+  POSTER_WIDTH / 2 / (POSTER_WIDTH / 2 + layout.card.glowMargin);
+
+/** Мягкое свечение: яркий цвет до края постера, плавно гаснет наружу. */
+const GLOW_GRADIENT: ShaderRadialGradientProps = {
+  colors: [palette.accent.primary, palette.accent.primary, palette.transparent],
+  stops: [0, GLOW_FADE_START, 1],
+  w: POSTER_WIDTH / 2 + layout.card.glowMargin,
+  h: POSTER_HEIGHT / 2 + layout.card.glowMargin,
+  pivot: [0.5, 0.5],
+};
 
 const UI_TEXT = {
   loading: 'Загрузка…',
@@ -123,7 +138,7 @@ export default function HomeScreen(props: ScreenProps) {
               height={layout.card.height}
               x={x}
               y={y}
-              color={focused() ? palette.accent.primary : palette.transparent}
+              color={palette.transparent}
               onLeft={() => {
                 focus.move('left');
                 return true;
@@ -146,12 +161,21 @@ export default function HomeScreen(props: ScreenProps) {
               }}
             >
               <view
-                width={layout.card.width - 2 * layout.card.focusInset}
-                height={layout.card.posterHeight - 2 * layout.card.focusInset}
+                x={layout.card.focusInset - layout.card.glowMargin}
+                y={layout.card.focusInset - layout.card.glowMargin}
+                width={POSTER_WIDTH + 2 * layout.card.glowMargin}
+                height={POSTER_HEIGHT + 2 * layout.card.glowMargin}
+                alpha={focused() ? 1 : 0}
+                radialGradient={GLOW_GRADIENT}
+              />
+              <view
+                width={POSTER_WIDTH}
+                height={POSTER_HEIGHT}
                 x={layout.card.focusInset}
                 y={layout.card.focusInset}
                 src={poster}
                 placeholderColor={palette.card.background}
+                borderRadius={layout.card.radius}
                 textureOptions={{ resizeMode: { type: 'cover' } }}
               />
               <text
@@ -162,9 +186,10 @@ export default function HomeScreen(props: ScreenProps) {
                 fontFamily={typography.family}
                 fontSize={typography.size.cardTitle}
                 lineHeight={typography.lineHeight.cardTitle}
-                color={focused() ? palette.accent.primary : palette.text.primary}
+                color={palette.text.primary}
                 textAlign="center"
                 verticalAlign="middle"
+                contain="width"
                 maxLines={1}
               >
                 {title}

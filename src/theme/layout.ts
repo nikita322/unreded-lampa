@@ -7,10 +7,14 @@ export const layout = {
     /** Полная высота карточки: постер + заголовок + отступ. */
     height: 340,
     posterHeight: 300,
-    titleHeight: 32,
-    titleGap: 8,
-    /** Отступ постера от рамки фокуса. */
+    titleHeight: 28,
+    titleGap: 6,
+    /** Отступ постера от края карточки. */
     focusInset: 6,
+    /** Скругление постера. */
+    radius: 14,
+    /** Насколько свечение выходит за постер. */
+    glowMargin: 24,
   },
   grid: {
     gap: spacing.lg,
