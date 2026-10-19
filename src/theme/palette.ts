@@ -7,8 +7,15 @@ export const palette = {
     base: 0x0b1026ff,
     alternate: 0x122036ff,
   },
-  item: {
-    default: 0x1b2a4aff,
-    focused: 0x2f81f7ff,
+  transparent: 0x00000000,
+  accent: {
+    primary: 0x2f81f7ff,
+  },
+  card: {
+    background: 0x1b2a4aff,
+  },
+  text: {
+    primary: 0xffffffff,
+    secondary: 0x9aa4b2ff,
   },
 } as const;

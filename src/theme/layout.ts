@@ -1,11 +1,22 @@
+import { spacing } from './spacing';
+
 /** Базовые размеры контента (логические px). */
 export const layout = {
-  item: {
-    width: 480,
-    height: 96,
+  card: {
+    width: 200,
+    /** Полная высота карточки: постер + заголовок + отступ. */
+    height: 340,
+    posterHeight: 300,
+    titleHeight: 32,
+    titleGap: 8,
+    /** Отступ постера от рамки фокуса. */
+    focusInset: 6,
   },
-  menu: {
-    /** Вертикальный отступ первого пункта списка от верхнего края экрана. */
-    listTop: 240,
+  grid: {
+    gap: spacing.lg,
+    left: 96,
+    right: 96,
+    top: 160,
+    bottom: 96,
   },
 } as const;

@@ -18,6 +18,7 @@ export const IMAGE_SIZE = {
   poster: 'w500',
   backdrop: 'w780',
   profile: 'w342',
+  card: 'w342',
 } as const;
 
 /** Пути к методам TMDB. */

@@ -5,7 +5,10 @@
 export const CACHE_DB_NAME = 'lampa_cache' as const;
 
 /** Версия схемы кэша — меняется при изменении набора хранилищ. */
-export const CACHE_DB_VERSION = 8;
+export const CACHE_DB_VERSION = 9;
+
+/** Хранилище для кэша JSON-ответов API. */
+export const CACHE_STORE_API = 'api' as const;
 
 export const CACHE_STORES = [
   'screensavers',
@@ -15,4 +18,5 @@ export const CACHE_STORES = [
   'themes',
   'other',
   'timetable',
+  CACHE_STORE_API,
 ] as const;
