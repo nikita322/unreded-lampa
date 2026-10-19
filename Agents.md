@@ -241,7 +241,8 @@ Vite + TS strict + SolidTV, адаптивный экран-заглушка, р
 - SolidTV (`@solidtv/solid`) — доступен и проверен, fallback не нужен.
 - `@solidjs/router@^0.16.3` — из-за peer-зависимости SolidTV.
 - Этап 1 без текста: canvas-текст требует SDF-атласа; шрифт добавим на этапе 2/5.
-- Размер интерфейса — из окна запуска (`window.innerWidth/innerHeight` + DPR).
+- Размер интерфейса — из реального layout-размера `#app` (`clientWidth/clientHeight` + DPR),
+  а не из `window.innerWidth/Height`; страница без скроллов (`overflow: hidden`).
 - Старый код перенесён в `legacy/` через `git mv` (история сохранена).
 - `package-lock.json` остаётся в `.gitignore` (как было в репозитории).
 
