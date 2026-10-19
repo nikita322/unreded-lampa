@@ -42,9 +42,6 @@ const MAX_CARDS = GRID_COLUMNS * GRID_ROWS;
 const POSTER_WIDTH = layout.card.width - 2 * layout.card.focusInset;
 const POSTER_HEIGHT = layout.card.posterHeight - 2 * layout.card.focusInset;
 
-/** Готовый мягкий ореол (радиальный градиент, цвет совпадает с palette.accent.primary). */
-const GLOW_IMAGE = '/assets/glow.svg';
-
 const UI_TEXT = {
   loading: 'Загрузка…',
   error: 'Ошибка загрузки',
@@ -129,7 +126,7 @@ export default function HomeScreen(props: ScreenProps) {
               height={layout.card.height}
               x={x}
               y={y}
-              color={palette.transparent}
+              color={focused() ? palette.accent.primary : palette.transparent}
               onLeft={() => {
                 focus.move('left');
                 return true;
@@ -151,14 +148,6 @@ export default function HomeScreen(props: ScreenProps) {
                 return true;
               }}
             >
-              <view
-                x={layout.card.focusInset - layout.card.glowMargin}
-                y={layout.card.focusInset - layout.card.glowMargin}
-                width={POSTER_WIDTH + 2 * layout.card.glowMargin}
-                height={POSTER_HEIGHT + 2 * layout.card.glowMargin}
-                src={GLOW_IMAGE}
-                alpha={focused() ? 1 : 0}
-              />
               <view
                 width={POSTER_WIDTH}
                 height={POSTER_HEIGHT}

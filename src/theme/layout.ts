@@ -13,8 +13,6 @@ export const layout = {
     focusInset: 6,
     /** Скругление постера. */
     radius: 14,
-    /** Насколько свечение выходит за постер. */
-    glowMargin: 24,
   },
   grid: {
     gap: spacing.lg,
