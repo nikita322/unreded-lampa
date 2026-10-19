@@ -1,10 +1,12 @@
+import { APP_ROOT_ID } from '../constants/dom';
+
 /**
  * Фактический размер области рендера.
  * Читается один раз при старте из реального layout-размера #app,
  * а не из window.innerWidth/Height — так учитываются devtools и скроллбары.
  */
 function measureViewport(): { readonly width: number; readonly height: number } {
-  const app = document.getElementById('app');
+  const app = document.getElementById(APP_ROOT_ID);
 
   return {
     width: app?.clientWidth || document.documentElement.clientWidth || window.innerWidth,

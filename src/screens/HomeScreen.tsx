@@ -3,7 +3,7 @@ import { push, type ScreenProps } from '../activity';
 import { SCREEN } from '../config/screen';
 import { createFocusIndex } from '../utils/focus';
 import { layout, palette, spacing } from '../theme';
-import DetailScreen from './DetailScreen';
+import PlayerScreen from '../player/PlayerScreen';
 
 const MENU_ITEM_COUNT = 3;
 const MENU_INDEXES = Array.from({ length: MENU_ITEM_COUNT }, (_, index) => index) as readonly number[];
@@ -32,7 +32,7 @@ export default function HomeScreen(props: ScreenProps) {
               return true;
             }}
             onEnter={() => {
-              push(DetailScreen);
+              push(PlayerScreen);
               return true;
             }}
           />
