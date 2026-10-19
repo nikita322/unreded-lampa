@@ -10,6 +10,8 @@ export const palette = {
   transparent: 0x00000000,
   accent: {
     primary: 0x2f81f7ff,
+    /** Полупрозрачная заливка фона сфокусированной карточки. */
+    overlay: 0x2f81f726,
   },
   card: {
     background: 0x1b2a4aff,
