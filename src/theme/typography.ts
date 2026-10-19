@@ -1,6 +1,6 @@
 /** Типографика: семейство SDF-шрифта и размеры. */
 export const typography = {
-  family: 'Lato',
+  family: 'Roboto',
   size: {
     cardTitle: 24,
     status: 32,
@@ -11,12 +11,12 @@ export const typography = {
 } as const;
 
 /**
- * SDF-атлас шрифта. Файлы лежат в public/fonts/.
- * Источник: solid-tv/solid-demo-app (Lato Regular, лицензия OFL).
+ * SDF-атлас шрифта (кириллица + латиница). Файлы лежат в public/fonts/,
+ * генерация — scripts/generate-font.mjs. Roboto, лицензия OFL.
  */
 export const FONT = {
   type: 'msdf',
   family: typography.family,
-  atlasUrl: '/fonts/Lato-Regular.msdf.png',
-  atlasDataUrl: '/fonts/Lato-Regular.msdf.json',
+  atlasUrl: '/fonts/Roboto-Regular.msdf.png',
+  atlasDataUrl: '/fonts/Roboto-Regular.msdf.json',
 } as const;
