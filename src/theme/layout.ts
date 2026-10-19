@@ -1,11 +1,7 @@
-/** Базовые размеры и соотношения контента (логические px). */
+/** Базовые размеры контента (логические px). */
 export const layout = {
-  content: {
-    maxWidth: 640,
-    maxHeight: 120,
-  },
-  ratios: {
-    contentWidth: 0.8,
-    contentHeight: 0.15,
+  item: {
+    width: 480,
+    height: 96,
   },
 } as const;
