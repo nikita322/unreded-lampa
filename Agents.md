@@ -188,7 +188,7 @@ export const spacing = {
 Vite + TS strict + SolidTV, адаптивный экран-заглушка, рабочий `npm run dev` + HMR.
 Готово когда: `npm run dev` на 5173, `npm run build` без ошибок, старый код в `legacy/`.
 
-### Этап 2 — activity → сигнал + `<App />`
+### Этап 2 — activity → сигнал + `<App />` (✅ выполнено, `5628d9cb`)
 Порт `legacy/src/interaction/activity.js`: сигнал `activityStack`, `Activity.push/pop` без DOM.
 Две экранные заглушки; навигация `Enter` (вперёд) и `Back`/Escape (назад), стрелки — движение фокуса.
 Готово когда: переходы работают с клавиатуры; дерево не пересоздаётся; нет глобального `Lampa.Activity`.
