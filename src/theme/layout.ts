@@ -4,4 +4,8 @@ export const layout = {
     width: 480,
     height: 96,
   },
+  menu: {
+    /** Вертикальный отступ первого пункта списка от верхнего края экрана. */
+    listTop: 240,
+  },
 } as const;

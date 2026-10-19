@@ -1,13 +1,12 @@
 import { For } from 'solid-js';
 import { push, type ScreenProps } from '../activity';
 import { SCREEN } from '../config/screen';
-import { createFocusIndex } from '../core/focus';
+import { createFocusIndex } from '../utils/focus';
 import { layout, palette, spacing } from '../theme';
 import DetailScreen from './DetailScreen';
 
 const MENU_ITEM_COUNT = 3;
 const MENU_INDEXES = Array.from({ length: MENU_ITEM_COUNT }, (_, index) => index) as readonly number[];
-const LIST_TOP = 240;
 const ITEM_GAP = spacing.lg;
 
 export default function HomeScreen(props: ScreenProps) {
@@ -22,7 +21,7 @@ export default function HomeScreen(props: ScreenProps) {
             width={layout.item.width}
             height={layout.item.height}
             x={(SCREEN.width - layout.item.width) / 2}
-            y={LIST_TOP + index * (layout.item.height + ITEM_GAP)}
+            y={layout.menu.listTop + index * (layout.item.height + ITEM_GAP)}
             color={focus.index() === index ? palette.item.focused : palette.item.default}
             onUp={() => {
               focus.move(-1);
