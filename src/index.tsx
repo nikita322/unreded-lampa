@@ -1,8 +1,8 @@
 import { createRenderer } from '@solidtv/solid';
 import { useFocusManager } from '@solidtv/solid/primitives';
 import App from './App';
+import { SCREEN } from './config/screen';
 import { keymap } from './keymap';
-import { SCREEN } from './screen';
 
 const { render } = createRenderer({
   appWidth: SCREEN.width,
